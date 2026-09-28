@@ -7,15 +7,17 @@ import ApplicationDetails from '../components/ApplicationDetails';
 import { getApplicationByNumber } from '../services/applicationService';
 
 /**
- * Dynamic Application Status Result Page
+ * Production-Quality Application Status Result Page
  * 
- * Renders the fetched demonstration application dynamically:
- * - Summary panel (Applicant, Type, Number, Last updated, Status)
- * - State-specific Canada.ca alert
- * - Dynamic Timeline (<Timeline timeline={application.timeline} />)
- * - Dynamic Application Details (<ApplicationDetails application={application} />)
- * - "What this status means" explanation
- * - "Check another application" action button
+ * Complete visual overhaul implementing:
+ * 1. Top breadcrumb & header with [ DEMONSTRATION RECORD ] badge
+ * 2. Large status hero summary panel with prominent status badge
+ * 3. 2-column clean information details grid
+ * 4. Dedicated "What this status means" blue information panel
+ * 5. Dedicated "What happens next" demonstration workflow steps
+ * 6. Vertical application progress timeline with connecting line
+ * 7. Compact demonstration disclaimer
+ * 8. Actions: [ Check another application ], [ Print demonstration record ]
  */
 export default function ApplicationStatus() {
   const { id } = useParams();
@@ -27,7 +29,6 @@ export default function ApplicationStatus() {
   const [notFound, setNotFound] = useState(false);
 
   useEffect(() => {
-    // If not passed via navigation state, fetch from service layer
     if (!application && id) {
       setLoading(true);
       getApplicationByNumber(id)
@@ -56,9 +57,9 @@ export default function ApplicationStatus() {
         />
         <main id="main-content" className="gov-main-content">
           <div className="gov-container">
-            <div className="gov-alert gov-alert-info" style={{ marginTop: '24px' }}>
-              <h2 className="gov-alert-title" style={{ fontSize: '1.125rem' }}>Loading demonstration file...</h2>
-              <p>Please wait while the demonstration record is retrieved.</p>
+            <div className="gov-alert gov-alert-info" style={{ marginTop: '32px' }}>
+              <h2 className="gov-alert-title">Loading demonstration file...</h2>
+              <p>Please wait while your simulated application status is retrieved.</p>
             </div>
           </div>
         </main>
@@ -79,10 +80,10 @@ export default function ApplicationStatus() {
         />
         <main id="main-content" className="gov-main-content">
           <div className="gov-container">
-            <div className="gov-alert gov-alert-error" style={{ marginTop: '24px' }}>
-              <h2 className="gov-alert-title">Demonstration file not found</h2>
-              <p>We could not retrieve the requested demonstration file record.</p>
-              <div style={{ marginTop: '16px' }}>
+            <div className="gov-alert gov-alert-error" style={{ marginTop: '32px' }}>
+              <h2 className="gov-alert-title">Demonstration application not found</h2>
+              <p>We could not locate demonstration record "{id}". Please check the application number.</p>
+              <div style={{ marginTop: '20px' }}>
                 <Link to="/login" className="btn btn-primary">Check another application</Link>
               </div>
             </div>
@@ -92,11 +93,33 @@ export default function ApplicationStatus() {
     );
   }
 
-  // Determine Alert Box CSS class based on application's alertType
-  let alertBoxClass = 'gov-alert-info';
-  if (application.alertType === 'warning') alertBoxClass = 'gov-alert-warning';
-  if (application.alertType === 'success') alertBoxClass = 'gov-alert-success';
-  if (application.alertType === 'danger') alertBoxClass = 'gov-alert-danger';
+  // Determine dynamic next steps based on application status
+  const normalizedStatus = application.status.toLowerCase();
+  let nextSteps = [
+    { num: '1', title: 'Application review', desc: 'Processing officer verifies documents and eligibility criteria (Demonstration).' },
+    { num: '2', title: 'Background verification', desc: 'Inter-agency identity, criminal, and security screenings are conducted.' },
+    { num: '3', title: 'Final decision', desc: 'Designated supervisory officer issues the official determination notification.' }
+  ];
+
+  if (normalizedStatus.includes('approved')) {
+    nextSteps = [
+      { num: '1', title: 'Approval confirmation', desc: 'Simulated positive decision recorded in the demonstration profile.' },
+      { num: '2', title: 'Document issuance', desc: 'Counterfoil simulation or electronic travel authorization issued.' },
+      { num: '3', title: 'File closed', desc: 'Intake and evaluation process concluded successfully.' }
+    ];
+  } else if (normalizedStatus.includes('refused')) {
+    nextSteps = [
+      { num: '1', title: 'Decision registered', desc: 'Simulated refusal determination finalized under demonstration rules.' },
+      { num: '2', title: 'Explanation documented', desc: 'Detailed refusal findings archived for prototype review.' },
+      { num: '3', title: 'File archived', desc: 'Application file formally closed in demonstration database.' }
+    ];
+  } else if (normalizedStatus.includes('required') || normalizedStatus.includes('documents')) {
+    nextSteps = [
+      { num: '1', title: 'Applicant submission', desc: 'Provide requested supplementary documents or attend biometric enrolment.' },
+      { num: '2', title: 'Material verification', desc: 'Reviewing officer verifies submitted records upon arrival.' },
+      { num: '3', title: 'Evaluation resumed', desc: 'Application proceeds towards final determination.' }
+    ];
+  }
 
   return (
     <>
@@ -111,94 +134,104 @@ export default function ApplicationStatus() {
 
       <main id="main-content" className="gov-main-content">
         <div className="gov-container">
-          
-          {/* Page Heading & Demonstration Badge */}
-          <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', flexWrap: 'wrap', gap: '12px', marginBottom: '8px' }}>
-            <h1 style={{ marginBottom: 0 }}>Application status</h1>
-            <span className="gov-badge gov-badge-demo" style={{ fontSize: '0.8125rem' }}>
-              DEMONSTRATION RECORD
-            </span>
-          </div>
 
-          <p className="lead-text">
-            Simulated public-service status tracking record for demonstration purposes.
-          </p>
-
-          {/* Demonstration Notice Box */}
-          <div className="gov-alert gov-alert-info" style={{ marginTop: '12px', marginBottom: '20px' }}>
-            <p style={{ margin: 0 }}>
-              <strong>Important demonstration disclaimer:</strong> This application status is fictional demonstration data and does not represent a real immigration application or official Government of Canada file.
-            </p>
-          </div>
-
-          {/* Top Summary Card */}
-          <div className="gov-summary-card">
-            <span className="gov-badge gov-badge-demo">DEMONSTRATION RECORD</span>
-            <div className="gov-summary-grid">
-              <div>
-                <span className="gov-summary-label">Applicant Name</span>
-                <div className="gov-summary-value">{application.applicantName}</div>
-              </div>
-              <div>
-                <span className="gov-summary-label">Application Type</span>
-                <div className="gov-summary-value">{application.applicationType}</div>
-              </div>
-              <div>
-                <span className="gov-summary-label">Application Number</span>
-                <div className="gov-summary-value">{application.applicationNumber}</div>
-              </div>
-              <div>
-                <span className="gov-summary-label">Last Updated</span>
-                <div className="gov-summary-value">{application.lastUpdated}</div>
-              </div>
-              <div>
-                <span className="gov-summary-label">Current Status</span>
-                <div className="gov-summary-value" style={{ marginTop: '4px' }}>
-                  <StatusBadge status={application.status} />
-                </div>
-              </div>
+          {/* Top Header Row with Demonstration Badge */}
+          <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', flexWrap: 'wrap', gap: '16px', marginBottom: '8px' }}>
+            <div>
+              <h1 style={{ marginBottom: '6px' }}>Application status</h1>
+              <p className="lead-text" style={{ marginBottom: 0 }}>
+                Simulated public-service tracking record for demonstration purposes.
+              </p>
+            </div>
+            <div style={{ alignSelf: 'center' }}>
+              <span className="gov-badge gov-badge-demo" style={{ padding: '6px 14px', fontSize: '0.8125rem' }}>
+                DEMONSTRATION RECORD
+              </span>
             </div>
           </div>
 
-          {/* Dynamic Canada.ca Alert Box */}
-          <div className={`gov-alert ${alertBoxClass}`}>
-            <h2 className="gov-alert-title" style={{ fontSize: '1.125rem' }}>
-              {application.alertTitle || application.status}
-            </h2>
-            <p>{application.statusDescription}</p>
-          </div>
-
-          {/* Dynamic Timeline Component */}
-          <Timeline timeline={application.timeline} />
-
-          {/* Dynamic Application Details Component */}
-          <ApplicationDetails application={application} />
-
-          {/* Status Explanation Section */}
-          <section className="gov-explanation-section" style={{ marginTop: '24px', marginBottom: '32px' }}>
-            <h2>What this status means</h2>
-            <p>{application.statusDescription}</p>
+          {/* 17. STATUS HERO / SUMMARY PANEL */}
+          <section className="gov-status-hero-card" aria-labelledby="statusHeroHeading">
+            <div className="gov-status-hero-header" id="statusHeroHeading">
+              Application Status Overview
+            </div>
             
-            {application.actionRequired && (
-              <div className="gov-alert gov-alert-warning" style={{ marginTop: '16px' }}>
-                <h3 className="gov-alert-title">Required action</h3>
-                <p>{application.actionRequired}</p>
-              </div>
-            )}
+            <div className="gov-status-hero-name">
+              {application.applicantName}
+            </div>
+            
+            <div className="gov-status-hero-meta">
+              <strong>{application.applicationType}</strong> &bull; File #{application.applicationNumber}
+            </div>
 
-            <div className="gov-alert gov-alert-info" style={{ marginTop: '16px' }}>
-              <h3 className="gov-alert-title">Official information resource</h3>
-              <p>
-                To check authentic Canadian immigration application processing times or consult official IRCC guidelines, please visit the Government of Canada website at <a href="https://www.canada.ca/en/immigration-refugees-citizenship.html" target="_blank" rel="noopener noreferrer">canada.ca/immigration</a>.
-              </p>
+            {/* Current Status Highlight: Most prominent element */}
+            <div className="gov-status-hero-current">
+              <div>
+                <span className="gov-status-hero-current-label">Current Status</span>
+                <StatusBadge status={application.status} size="large" />
+              </div>
+              <div className="gov-status-hero-updated">
+                <strong>Last updated:</strong> {application.lastUpdated}
+              </div>
             </div>
           </section>
 
+          {/* 19. APPLICATION DETAILS (2-Column Clean Information Grid) */}
+          <ApplicationDetails application={application} />
+
+          {/* 21. CURRENT STATUS MESSAGE (Blue Left Border Information Panel) */}
+          <section className="gov-alert gov-alert-info" style={{ marginTop: '28px', marginBottom: '32px' }} aria-labelledby="statusMeaningHeading">
+            <h2 className="gov-alert-title" id="statusMeaningHeading" style={{ fontSize: '1.25rem' }}>
+              What this status means
+            </h2>
+            <p style={{ fontSize: '1.0625rem', lineHeight: 1.6, marginBottom: application.actionRequired ? '16px' : 0 }}>
+              {application.statusDescription}
+            </p>
+
+            {application.actionRequired && (
+              <div style={{ backgroundColor: 'rgba(255, 255, 255, 0.7)', border: '1px solid var(--color-blue-border)', borderRadius: '3px', padding: '12px 16px', marginTop: '12px' }}>
+                <strong style={{ color: 'var(--color-blue-hover)', display: 'block', marginBottom: '4px' }}>
+                  Action item:
+                </strong>
+                <span style={{ color: 'var(--color-text-primary)' }}>
+                  {application.actionRequired}
+                </span>
+              </div>
+            )}
+          </section>
+
+          {/* 20. TIMELINE (Dedicated Progress Section) */}
+          <Timeline timeline={application.timeline} />
+
+          {/* 22. WHAT HAPPENS NEXT (Demonstration Workflow) */}
+          <section className="gov-next-steps-section" style={{ marginTop: '36px', marginBottom: '36px' }} aria-labelledby="nextStepsHeading">
+            <h2 id="nextStepsHeading">What happens next</h2>
+            <p className="text-small" style={{ color: 'var(--color-text-secondary)', marginBottom: '16px' }}>
+              Demonstration workflow sequence for this file category:
+            </p>
+            <div className="gov-next-steps-grid">
+              {nextSteps.map(step => (
+                <div key={step.num} className="gov-next-step-card">
+                  <div className="gov-next-step-number">{step.num}</div>
+                  <h3 className="gov-next-step-title">{step.title}</h3>
+                  <p>{step.desc}</p>
+                </div>
+              ))}
+            </div>
+          </section>
+
+          {/* 24. DEMONSTRATION NOTICE (Restrained, non-overpowering) */}
+          <div className="gov-alert" style={{ borderLeftColor: 'var(--color-gray-dark)', backgroundColor: 'var(--color-gray-surface)', margin: '32px 0 24px 0' }}>
+            <p style={{ margin: 0, fontSize: '0.9375rem', color: 'var(--color-text-secondary)' }}>
+              <strong>Notice:</strong> This status is fictional demonstration data and does not represent a real immigration application. For official Canadian visa status inquiries, please consult the official IRCC portal at <a href="https://www.canada.ca/en/immigration-refugees-citizenship.html" target="_blank" rel="noopener noreferrer">canada.ca/immigration</a>.
+            </p>
+          </div>
+
           {/* Actions Bar */}
-          <div className="btn-group" style={{ marginTop: '24px', paddingBottom: '24px' }}>
+          <div className="btn-group" style={{ marginTop: '24px', paddingBottom: '32px' }}>
             <button 
               type="button" 
-              className="btn btn-secondary"
+              className="btn btn-primary"
               onClick={() => navigate('/login')}
             >
               Check another application

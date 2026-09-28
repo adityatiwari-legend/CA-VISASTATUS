@@ -1,17 +1,18 @@
 import React from 'react';
-import StatusBadge from './StatusBadge';
 
 /**
- * Reusable Dynamic Application Details Component
+ * Enhanced 2-Column Application Details Component
  * 
- * Displays clean government-style key-value table:
+ * Replaces cramped table styling with a clean, highly readable 2-column grid:
  * - Application type
  * - Application number
- * - Submission date
+ * - Submitted date
  * - Last updated
  * - Current stage
- * - Status
- * Plus supporting administrative criteria (Office, Biometrics, Medical, Background check).
+ * - Processing office
+ * - Biometrics status
+ * - Medical examination
+ * - Background check
  */
 export default function ApplicationDetails({ application }) {
   if (!application) return null;
@@ -19,82 +20,78 @@ export default function ApplicationDetails({ application }) {
   const details = application.applicationDetails || {};
 
   return (
-    <div className="gov-details-section" style={{ marginTop: '24px', marginBottom: '32px' }}>
-      <h2>Application details</h2>
-      <div className="gov-table-container">
-        <table className="gov-table gov-table-key-value">
-          <caption className="sr-only">Detailed demonstration file records</caption>
-          <tbody>
-            <tr>
-              <th scope="row">Application type</th>
-              <td>
-                {application.applicationType}
-                {details.categoryCode && (
-                  <span className="text-small" style={{ display: 'block', color: 'var(--color-text-muted)' }}>
-                    Category: {details.categoryCode}
-                  </span>
-                )}
-              </td>
-            </tr>
-            <tr>
-              <th scope="row">Application number</th>
-              <td><strong>{application.applicationNumber}</strong></td>
-            </tr>
-            <tr>
-              <th scope="row">Applicant full name</th>
-              <td>{application.applicantName}</td>
-            </tr>
-            <tr>
-              <th scope="row">Submission date</th>
-              <td>{application.submissionDate}</td>
-            </tr>
-            <tr>
-              <th scope="row">Last updated</th>
-              <td>{application.lastUpdated}</td>
-            </tr>
-            <tr>
-              <th scope="row">Current stage</th>
-              <td><strong>{application.currentStage}</strong></td>
-            </tr>
-            {application.office && (
-              <tr>
-                <th scope="row">Processing office</th>
-                <td>{application.office}</td>
-              </tr>
-            )}
-            {details.biometricsStatus && (
-              <tr>
-                <th scope="row">Biometrics status</th>
-                <td>{details.biometricsStatus}</td>
-              </tr>
-            )}
-            {details.medicalExam && (
-              <tr>
-                <th scope="row">Medical examination</th>
-                <td>{details.medicalExam}</td>
-              </tr>
-            )}
-            {details.backgroundCheck && (
-              <tr>
-                <th scope="row">Background check</th>
-                <td>{details.backgroundCheck}</td>
-              </tr>
-            )}
-            {application.estimatedProcessingDays && (
-              <tr>
-                <th scope="row">Estimated processing</th>
-                <td>{application.estimatedProcessingDays}</td>
-              </tr>
-            )}
-            <tr>
-              <th scope="row">Current status</th>
-              <td>
-                <StatusBadge status={application.status} />
-              </td>
-            </tr>
-          </tbody>
-        </table>
+    <section className="gov-details-section" aria-labelledby="detailsHeading">
+      <h2 id="detailsHeading">Application details</h2>
+      <div className="gov-details-grid">
+        
+        <div className="gov-details-cell">
+          <span className="gov-details-label">Application type</span>
+          <div className="gov-details-value">{application.applicationType}</div>
+          {details.categoryCode && (
+            <span className="text-small" style={{ color: 'var(--color-text-secondary)', display: 'block', marginTop: '2px' }}>
+              Category: {details.categoryCode}
+            </span>
+          )}
+        </div>
+
+        <div className="gov-details-cell">
+          <span className="gov-details-label">Application number</span>
+          <div className="gov-details-value">{application.applicationNumber}</div>
+        </div>
+
+        <div className="gov-details-cell">
+          <span className="gov-details-label">Submitted</span>
+          <div className="gov-details-value">{application.submissionDate}</div>
+        </div>
+
+        <div className="gov-details-cell">
+          <span className="gov-details-label">Last updated</span>
+          <div className="gov-details-value">{application.lastUpdated}</div>
+        </div>
+
+        <div className="gov-details-cell">
+          <span className="gov-details-label">Current stage</span>
+          <div className="gov-details-value" style={{ color: 'var(--color-red-primary)' }}>
+            {application.currentStage}
+          </div>
+        </div>
+
+        {application.office && (
+          <div className="gov-details-cell">
+            <span className="gov-details-label">Processing office</span>
+            <div className="gov-details-value">{application.office}</div>
+          </div>
+        )}
+
+        {details.biometricsStatus && (
+          <div className="gov-details-cell">
+            <span className="gov-details-label">Biometrics status</span>
+            <div className="gov-details-value">{details.biometricsStatus}</div>
+          </div>
+        )}
+
+        {details.medicalExam && (
+          <div className="gov-details-cell">
+            <span className="gov-details-label">Medical examination</span>
+            <div className="gov-details-value">{details.medicalExam}</div>
+          </div>
+        )}
+
+        {details.backgroundCheck && (
+          <div className="gov-details-cell">
+            <span className="gov-details-label">Background check</span>
+            <div className="gov-details-value">{details.backgroundCheck}</div>
+          </div>
+        )}
+
+        {application.estimatedProcessingDays && (
+          <div className="gov-details-cell">
+            <span className="gov-details-label">Estimated processing</span>
+            <div className="gov-details-value">{application.estimatedProcessingDays}</div>
+          </div>
+        )}
+
       </div>
-    </div>
+    </section>
   );
 }

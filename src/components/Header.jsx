@@ -1,19 +1,27 @@
 import React, { useState } from 'react';
-import { Link, NavLink, useNavigate } from 'react-router-dom';
+import { Link, NavLink, useLocation, useNavigate } from 'react-router-dom';
 
 /**
- * Top Government-Style Header Component
- * Strict Canada.ca visual language with prominent demonstration disclaimers.
+ * Government Digital Service Header Component
+ * Two-level header with slim top disclaimer, brand wordmark, search, and primary navigation.
  */
 export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+  const location = useLocation();
   const navigate = useNavigate();
+
+  // "Application Status" active state should light up when inside the status flow
+  const isStatusFlow = 
+    location.pathname.startsWith('/login') || 
+    location.pathname.startsWith('/status') || 
+    location.pathname.startsWith('/application-status');
 
   const handleSearchSubmit = (e) => {
     e.preventDefault();
     if (searchQuery.trim()) {
       navigate(`/search?q=${encodeURIComponent(searchQuery.trim())}`);
+      setMobileMenuOpen(false);
     }
   };
 
@@ -24,70 +32,39 @@ export default function Header() {
 
   return (
     <>
-      {/* Top Mandatory Demo Disclaimer Banner */}
-      <aside className="demo-top-disclaimer" aria-label="Demonstration Notice">
-        <div className="gov-container">
-          <div className="demo-top-disclaimer-inner">
-            <div style={{ display: 'flex', alignItems: 'center' }}>
-              <span className="demo-disclaimer-tag">DEMO PORTAL</span>
-              <p className="demo-disclaimer-text">
-                <strong>NOT AN OFFICIAL GOVERNMENT OF CANADA WEBSITE.</strong> This is an independent static demonstration and prototype.
-              </p>
-            </div>
-            <Link to="/help#disclaimer" className="demo-disclaimer-link">
-              Learn more
-            </Link>
-          </div>
-        </div>
-      </aside>
 
-      {/* Header Container */}
+      {/* Main Header Container */}
       <header className="gov-header" role="banner">
         <div className="gov-container">
           <div className="gov-top-bar">
             
-            {/* Fictional Portal Wordmark */}
+            {/* Fictional Portal Wordmark Brand */}
             <Link to="/" className="gov-brand" aria-label="Visa Status Portal Home">
-              <div className="gov-brand-symbol" aria-hidden="true">V</div>
+              <div className="gov-brand-icon" aria-hidden="true">V</div>
               <div className="gov-brand-text">
                 <span className="gov-brand-title">Visa Status Portal</span>
-                <span className="gov-brand-subtitle">Immigration Application Services — Demonstration</span>
+                <span className="gov-brand-subtitle">Immigration Application Services</span>
               </div>
             </Link>
 
-            {/* Header Right Utilities */}
+            {/* Header Right: Language, Search, and Mobile Toggle */}
             <div className="gov-header-utilities">
-              <button 
-                type="button" 
-                className="gov-mobile-toggle" 
-                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                aria-expanded={mobileMenuOpen}
-                aria-controls="mainNav" 
-                aria-label="Toggle Navigation Menu"
-              >
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                  <line x1="3" y1="12" x2="21" y2="12"></line>
-                  <line x1="3" y1="6" x2="21" y2="6"></line>
-                  <line x1="3" y1="18" x2="21" y2="18"></line>
-                </svg>
-                <span className="toggle-text">{mobileMenuOpen ? 'Close' : 'Menu'}</span>
-              </button>
-
-              <a href="#" className="gov-lang-toggle" onClick={handleLanguageClick} lang="fr">
+              
+              <a href="#" className="gov-lang-link" onClick={handleLanguageClick} lang="fr">
                 Français
               </a>
 
-              {/* Canada.ca Style Search Bar */}
+              {/* Polished Search Control (44px height, clean border, subtle focus ring) */}
               <form className="gov-search-form" onSubmit={handleSearchSubmit} role="search">
-                <div className="gov-search-group">
+                <div className="gov-search-control">
                   <label htmlFor="headerSearchInput" className="sr-only" style={{ position: 'absolute', width: '1px', height: '1px', padding: 0, margin: '-1px', overflow: 'hidden', clip: 'rect(0,0,0,0)', border: 0 }}>
-                    Search demonstration portal
+                    Search the demonstration portal...
                   </label>
                   <input 
                     type="search" 
                     id="headerSearchInput" 
                     className="gov-search-input" 
-                    placeholder="Search demonstration portal..." 
+                    placeholder="Search the demonstration portal..." 
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                     required 
@@ -100,47 +77,94 @@ export default function Header() {
                   </button>
                 </div>
               </form>
+
+              {/* Mobile Menu Button */}
+              <button 
+                type="button" 
+                className="gov-mobile-toggle" 
+                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                aria-expanded={mobileMenuOpen}
+                aria-controls="mainNav" 
+                aria-label="Toggle Navigation Menu"
+              >
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                  <line x1="3" y1="12" x2="21" y2="12"></line>
+                  <line x1="3" y1="6" x2="21" y2="6"></line>
+                  <line x1="3" y1="18" x2="21" y2="18"></line>
+                </svg>
+                <span>{mobileMenuOpen ? 'Close' : 'Menu'}</span>
+              </button>
+
             </div>
 
           </div>
         </div>
 
-        {/* Main Navigation Bar */}
+        {/* Primary Navigation Bar (Thin Red Accent Line Below) */}
         <nav className={`gov-main-nav ${mobileMenuOpen ? 'open' : ''}`} id="mainNav" aria-label="Primary Navigation">
           <div className="gov-container">
             <ul className="gov-nav-list">
               <li className="gov-nav-item">
-                <NavLink to="/" end className={({ isActive }) => `gov-nav-link ${isActive ? 'active' : ''}`}>
+                <NavLink 
+                  to="/" 
+                  end 
+                  onClick={() => setMobileMenuOpen(false)}
+                  className={({ isActive }) => `gov-nav-link ${isActive ? 'active' : ''}`}
+                >
                   Immigration
                 </NavLink>
               </li>
               <li className="gov-nav-item">
-                <NavLink to="/services#visitor" className={({ isActive }) => `gov-nav-link ${isActive ? 'active' : ''}`}>
+                <NavLink 
+                  to="/services#visitor" 
+                  onClick={() => setMobileMenuOpen(false)}
+                  className={({ isActive }) => `gov-nav-link ${isActive ? 'active' : ''}`}
+                >
                   Visit
                 </NavLink>
               </li>
               <li className="gov-nav-item">
-                <NavLink to="/services#study" className={({ isActive }) => `gov-nav-link ${isActive ? 'active' : ''}`}>
+                <NavLink 
+                  to="/services#study" 
+                  onClick={() => setMobileMenuOpen(false)}
+                  className={({ isActive }) => `gov-nav-link ${isActive ? 'active' : ''}`}
+                >
                   Study
                 </NavLink>
               </li>
               <li className="gov-nav-item">
-                <NavLink to="/services#work" className={({ isActive }) => `gov-nav-link ${isActive ? 'active' : ''}`}>
+                <NavLink 
+                  to="/services#work" 
+                  onClick={() => setMobileMenuOpen(false)}
+                  className={({ isActive }) => `gov-nav-link ${isActive ? 'active' : ''}`}
+                >
                   Work
                 </NavLink>
               </li>
               <li className="gov-nav-item">
-                <NavLink to="/services#pr" className={({ isActive }) => `gov-nav-link ${isActive ? 'active' : ''}`}>
+                <NavLink 
+                  to="/services#pr" 
+                  onClick={() => setMobileMenuOpen(false)}
+                  className={({ isActive }) => `gov-nav-link ${isActive ? 'active' : ''}`}
+                >
                   Permanent Residence
                 </NavLink>
               </li>
               <li className="gov-nav-item">
-                <NavLink to="/login" className={({ isActive }) => `gov-nav-link ${isActive ? 'active' : ''}`}>
+                <NavLink 
+                  to="/login" 
+                  onClick={() => setMobileMenuOpen(false)}
+                  className={`gov-nav-link ${isStatusFlow ? 'active' : ''}`}
+                >
                   Application Status
                 </NavLink>
               </li>
               <li className="gov-nav-item">
-                <NavLink to="/help" className={({ isActive }) => `gov-nav-link ${isActive ? 'active' : ''}`}>
+                <NavLink 
+                  to="/help" 
+                  onClick={() => setMobileMenuOpen(false)}
+                  className={({ isActive }) => `gov-nav-link ${isActive ? 'active' : ''}`}
+                >
                   Help
                 </NavLink>
               </li>

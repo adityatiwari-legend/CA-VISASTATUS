@@ -1,11 +1,13 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import Breadcrumbs from '../components/Breadcrumbs';
 
 /**
- * Help, FAQ, and Glossary Page
+ * Polished Help, FAQ, and Glossary Page
  */
 export default function Help({ onOpenDemoModal }) {
+  const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
+
   return (
     <>
       <Breadcrumbs 
@@ -22,21 +24,35 @@ export default function Help({ onOpenDemoModal }) {
 
             {/* Sidebar Navigation */}
             <aside className="gov-sidebar" aria-label="Help Navigation">
-              <nav className="gov-sidebar-nav">
-                <div className="gov-sidebar-header">Help &amp; Guidance</div>
-                <ul className="gov-sidebar-list">
-                  <li className="gov-sidebar-item"><a href="#faq" className="gov-sidebar-link active">Frequently Asked Questions</a></li>
-                  <li className="gov-sidebar-item"><a href="#status-stages" className="gov-sidebar-link">Application Status Glossary</a></li>
-                  <li className="gov-sidebar-item"><a href="#biometrics" className="gov-sidebar-link">Biometrics Collection</a></li>
-                  <li className="gov-sidebar-item"><a href="#disclaimer" className="gov-sidebar-link">Demonstration Disclaimer</a></li>
-                  <li className="gov-sidebar-item"><a href="#official" className="gov-sidebar-link">Official Canada.ca Links</a></li>
-                </ul>
-              </nav>
+              
+              <button 
+                type="button" 
+                className="gov-sidebar-mobile-toggle"
+                onClick={() => setMobileSidebarOpen(!mobileSidebarOpen)}
+                aria-expanded={mobileSidebarOpen}
+              >
+                <span>Help &amp; FAQ Menu</span>
+                <span>{mobileSidebarOpen ? '▲' : '▼'}</span>
+              </button>
 
-              <div className="gov-alert" style={{ borderLeftColor: 'var(--color-blue-link)', padding: '14px', background: '#FFFFFF', border: '1px solid var(--color-gray-border)', borderLeftWidth: '4px' }}>
-                <h3 style={{ fontSize: '0.9375rem', marginTop: 0, marginBottom: '6px' }}>Status Checker</h3>
-                <p className="text-small" style={{ marginBottom: '10px' }}>Test the lookup tool with sample file <code>DEMO-2026-001</code>.</p>
-                <Link to="/login" className="btn btn-secondary btn-sm" style={{ width: '100%' }}>Check Status</Link>
+              <div className={`gov-sidebar-content ${mobileSidebarOpen ? 'open' : ''}`}>
+                <nav className="gov-sidebar-nav">
+                  <div className="gov-sidebar-title">Help &amp; Guidance</div>
+                  <ul className="gov-sidebar-list">
+                    <li className="gov-sidebar-item"><a href="#faq" className="gov-sidebar-link active">Frequently Asked Questions</a></li>
+                    <li className="gov-sidebar-item"><a href="#status-stages" className="gov-sidebar-link">Application Status Glossary</a></li>
+                    <li className="gov-sidebar-item"><a href="#biometrics" className="gov-sidebar-link">Biometrics Collection</a></li>
+                    <li className="gov-sidebar-item"><a href="#contact" className="gov-sidebar-link">Demonstration Contact</a></li>
+                    <li className="gov-sidebar-item"><a href="#disclaimer" className="gov-sidebar-link">Demonstration Disclaimer</a></li>
+                    <li className="gov-sidebar-item"><a href="#official" className="gov-sidebar-link">Official Canada.ca Links</a></li>
+                  </ul>
+                </nav>
+
+                <div className="gov-alert" style={{ borderLeftColor: 'var(--color-blue-link)', padding: '16px', background: '#FFFFFF', border: '1px solid var(--color-gray-border)', borderLeftWidth: '4px' }}>
+                  <h3 style={{ fontSize: '0.9375rem', marginTop: 0, marginBottom: '6px' }}>Status Checker</h3>
+                  <p className="text-small" style={{ marginBottom: '12px' }}>Test the lookup tool with sample file <code>DEMO-2026-001</code>.</p>
+                  <Link to="/login" className="btn btn-secondary btn-sm" style={{ width: '100%' }}>Check Status</Link>
+                </div>
               </div>
             </aside>
 
@@ -50,7 +66,7 @@ export default function Help({ onOpenDemoModal }) {
 
               {/* Section: FAQ */}
               <section id="faq" className="gov-service-block">
-                <h2 className="gov-service-heading" style={{ fontSize: '1.75rem' }}>Frequently Asked Questions</h2>
+                <h2 className="gov-service-heading" style={{ fontSize: '1.875rem' }}>Frequently Asked Questions</h2>
                 
                 <h3>How do I test the application status tracker?</h3>
                 <p>
@@ -75,15 +91,15 @@ export default function Help({ onOpenDemoModal }) {
 
               {/* Section: Status Stages Glossary */}
               <section id="status-stages" className="gov-service-block">
-                <h2 className="gov-service-heading" style={{ fontSize: '1.75rem' }}>Application Status Stages Glossary</h2>
+                <h2 className="gov-service-heading" style={{ fontSize: '1.875rem' }}>Application Status Stages Glossary</h2>
                 <p>Public-service application processing follows structured administrative milestones. Below is an overview of each stage demonstrated in our 10 prototype records:</p>
 
                 <div className="gov-table-container">
                   <table className="gov-table">
                     <thead>
                       <tr>
-                        <th scope="col" style={{ width: '25%' }}>Status Stage</th>
-                        <th scope="col" style={{ width: '55%' }}>Administrative Meaning</th>
+                        <th scope="col" style={{ width: '28%' }}>Status Stage</th>
+                        <th scope="col" style={{ width: '52%' }}>Administrative Meaning</th>
                         <th scope="col" style={{ width: '20%' }}>Sample File</th>
                       </tr>
                     </thead>
@@ -145,7 +161,7 @@ export default function Help({ onOpenDemoModal }) {
 
               {/* Section: Biometrics */}
               <section id="biometrics" className="gov-service-block">
-                <h2 className="gov-service-heading" style={{ fontSize: '1.75rem' }}>Biometrics Collection Guidelines</h2>
+                <h2 className="gov-service-heading" style={{ fontSize: '1.875rem' }}>Biometrics Collection Guidelines</h2>
                 <p>Biometrics (fingerprints and digital photo) are required for most foreign nationals applying for a visitor visa, study or work permit, or permanent residence.</p>
                 
                 <div className="gov-alert gov-alert-warning">
@@ -153,35 +169,50 @@ export default function Help({ onOpenDemoModal }) {
                   <p>Applicants must receive an official Biometric Instruction Letter before scheduling an appointment at an authorized Visa Application Centre (VAC) or collection site. Appointments cannot be fulfilled without this document.</p>
                 </div>
 
-                <ul className="gov-service-links">
+                <ul style={{ paddingLeft: '20px', lineHeight: 1.8 }}>
                   <li><strong>Validity:</strong> Biometrics are generally valid for 10 years for temporary residence applications.</li>
                   <li><strong>Appointment process:</strong> Book an appointment online at a designated Visa Application Centre (VAC).</li>
                   <li><strong>Required items:</strong> Valid physical passport and printed Biometric Instruction Letter.</li>
                 </ul>
               </section>
 
+              {/* Section: Demonstration Contact */}
+              <section id="contact" className="gov-service-block">
+                <h2 className="gov-service-heading" style={{ fontSize: '1.875rem' }}>Demonstration Contact &amp; Inquiries</h2>
+                <p>
+                  As an independent prototype, this website does not provide direct consular representation, legal advice, or official application intake.
+                </p>
+                <div className="gov-alert gov-alert-info">
+                  <p style={{ margin: 0 }}>
+                    For genuine inquiries about existing Canadian immigration files, consult the official IRCC Web form or telephone support via the official Government of Canada website at <a href="https://www.canada.ca/en/immigration-refugees-citizenship/corporate/contact-ircc.html" target="_blank" rel="noopener noreferrer">canada.ca/contact-ircc</a>.
+                  </p>
+                </div>
+              </section>
+
               {/* Section: Demonstration Disclaimer */}
               <section id="disclaimer" className="gov-service-block">
-                <h2 className="gov-service-heading" style={{ fontSize: '1.75rem' }}>Demonstration Disclaimer &amp; Ethics Notice</h2>
+                <h2 className="gov-service-heading" style={{ fontSize: '1.875rem' }}>Demonstration Disclaimer &amp; Ethics Notice</h2>
                 <div className="gov-alert gov-alert-info">
                   <h3 className="gov-alert-title">DEMO PORTAL — NOT AN OFFICIAL GOVERNMENT OF CANADA SERVICE</h3>
                   <p>This website is an independent static demonstration website created for portfolio, technical evaluation, and educational demonstration purposes only. It is not affiliated with, endorsed by, or connected to:</p>
-                  <ul style={{ margin: '8px 0 12px 20px' }}>
+                  <ul style={{ margin: '8px 0 12px 24px', lineHeight: 1.8 }}>
                     <li>The Government of Canada</li>
                     <li>Immigration, Refugees and Citizenship Canada (IRCC)</li>
                     <li>The Canada Border Services Agency (CBSA)</li>
                     <li>Any official Canadian diplomatic mission or embassy</li>
                   </ul>
-                  <p>This prototype does not collect, transmit, or store real applicant data. All 10 applicant names, application numbers, birth dates, and statuses are entirely fictional.</p>
+                  <p style={{ marginBottom: 0 }}>
+                    This prototype does not collect, transmit, or store real applicant data. All 10 applicant names, application numbers, birth dates, and statuses are entirely fictional.
+                  </p>
                 </div>
               </section>
 
               {/* Section: Official Links */}
               <section id="official" className="gov-service-block" style={{ borderBottom: 'none' }}>
-                <h2 className="gov-service-heading" style={{ fontSize: '1.75rem' }}>Official Government of Canada Resources</h2>
+                <h2 className="gov-service-heading" style={{ fontSize: '1.875rem' }}>Official Government of Canada Resources</h2>
                 <p>If you are looking for real immigration information, legal application portals, official status trackers, or travel advisories, please consult the official resources below:</p>
                 
-                <ul className="gov-service-links">
+                <ul style={{ paddingLeft: '20px', lineHeight: 2 }}>
                   <li><a href="https://www.canada.ca/en/immigration-refugees-citizenship.html" target="_blank" rel="noopener noreferrer">Official IRCC Homepage — Canada.ca &UpperRightArrow;</a></li>
                   <li><a href="https://www.canada.ca/en/immigration-refugees-citizenship/services/application/check-status.html" target="_blank" rel="noopener noreferrer">Official IRCC Client Application Status Tool &UpperRightArrow;</a></li>
                   <li><a href="https://www.canada.ca/en/immigration-refugees-citizenship/services/application/check-processing-times.html" target="_blank" rel="noopener noreferrer">Official IRCC Check Processing Times Tool &UpperRightArrow;</a></li>

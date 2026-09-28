@@ -114,7 +114,7 @@ export default function Search({ onOpenDemoModal }) {
           <h1>Search results</h1>
 
           {/* Search Form */}
-          <form className="gov-form" onSubmit={handleSearchSubmit} style={{ maxWidth: '100%', marginBottom: '24px' }} role="search">
+          <form className="gov-form" onSubmit={handleSearchSubmit} style={{ maxWidth: '100%', marginBottom: '28px' }} role="search">
             <div className="gov-form-group">
               <label htmlFor="searchPageInput" className="gov-form-label">Search terms</label>
               <div style={{ display: 'flex', gap: '8px' }}>
@@ -126,9 +126,9 @@ export default function Search({ onOpenDemoModal }) {
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                   required 
-                  style={{ flex: 1 }}
+                  style={{ flex: 1, height: '48px' }}
                 />
-                <button type="submit" className="btn btn-primary" style={{ whiteSpace: 'nowrap' }}>
+                <button type="submit" className="btn btn-primary" style={{ whiteSpace: 'nowrap', height: '48px' }}>
                   Search
                 </button>
               </div>
@@ -136,7 +136,7 @@ export default function Search({ onOpenDemoModal }) {
           </form>
 
           {/* Results Metadata */}
-          <div style={{ fontSize: '1rem', color: 'var(--color-text-muted)', marginBottom: '24px' }}>
+          <div style={{ fontSize: '1rem', color: 'var(--color-text-secondary)', marginBottom: '24px' }}>
             {queryParam ? (
               <span>
                 Showing <strong>{results.length}</strong> demonstration result{results.length === 1 ? '' : 's'} for "<strong>{queryParam}</strong>":
@@ -152,7 +152,7 @@ export default function Search({ onOpenDemoModal }) {
               <div className="gov-alert gov-alert-warning">
                 <h2 className="gov-alert-title">No demonstration records found</h2>
                 <p>We could not find any pages or demo files matching your search term.</p>
-                <ul style={{ marginTop: '8px', marginLeft: '20px' }}>
+                <ul style={{ marginTop: '8px', marginLeft: '20px', lineHeight: 1.8 }}>
                   <li>Check your spelling</li>
                   <li>Search for broad terms like <strong>visitor</strong>, <strong>study</strong>, <strong>work</strong>, or <strong>biometrics</strong></li>
                   <li>Search for application numbers like <code>DEMO-2026-001</code></li>
@@ -161,17 +161,17 @@ export default function Search({ onOpenDemoModal }) {
               </div>
             ) : (
               results.map((item, index) => (
-                <article key={index} className="gov-service-block" style={{ paddingBottom: '18px', marginBottom: '20px' }}>
-                  <div style={{ fontSize: '0.8125rem', fontWeight: 700, color: 'var(--color-text-muted)', textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: '4px' }}>
+                <article key={index} className="gov-service-block" style={{ paddingBottom: '20px', marginBottom: '24px' }}>
+                  <div className="gov-service-category">
                     {item.category}
                   </div>
-                  <h2 className="gov-service-heading" style={{ fontSize: '1.35rem', marginBottom: '4px' }}>
+                  <h2 className="gov-service-heading" style={{ fontSize: '1.35rem', marginBottom: '6px' }}>
                     <Link to={item.url}>{item.title}</Link>
                   </h2>
-                  <p className="gov-service-desc" style={{ fontSize: '0.9375rem', marginBottom: '6px' }}>
+                  <p className="gov-service-desc" style={{ fontSize: '1rem', marginBottom: '8px' }}>
                     {item.description}
                   </p>
-                  <div style={{ fontSize: '0.8125rem', color: '#2D68C4' }}>
+                  <div style={{ fontSize: '0.8125rem', color: 'var(--color-blue-link)' }}>
                     {item.url}
                   </div>
                 </article>

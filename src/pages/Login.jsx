@@ -1,18 +1,19 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import Breadcrumbs from '../components/Breadcrumbs';
 import ErrorSummary from '../components/ErrorSummary';
 import { getApplicationStatus } from '../services/applicationService';
 
 /**
- * Login / Status Lookup Page
+ * Polished Government-Service Application Status Sign-In Page
  * 
- * Provides the public-service lookup form:
- * - Application Number
- * - Date of Birth
- * - [ Sign in ] button
- * - Loading spinner & "Checking application status..."
- * - Error handling via ErrorSummary component
+ * Features:
+ * - Proper H1 & descriptive lead
+ * - Form container constrained to max-width: 650px
+ * - Inputs with 50px height, 1px solid #7A7A7A, 16px text
+ * - Canada.ca Error Summary box that pushes form down naturally
+ * - Primary button [ Check status ] and secondary [ View demo applications ]
+ * - Desktop sidebar secondary navigation with collapsible mobile support
  */
 export default function Login({ onOpenDemoModal, prefilledRecord }) {
   const navigate = useNavigate();
@@ -27,9 +28,9 @@ export default function Login({ onOpenDemoModal, prefilledRecord }) {
   const [errors, setErrors] = useState([]);
   const [hasAppError, setHasAppError] = useState(false);
   const [hasDobError, setHasDobError] = useState(false);
+  const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
 
-  // If a prefilled record is passed from modal, update inputs
-  React.useEffect(() => {
+  useEffect(() => {
     if (prefilledRecord) {
       setApplicationNumber(prefilledRecord.applicationNumber);
       setDateOfBirth(prefilledRecord.displayDob);
@@ -48,12 +49,18 @@ export default function Login({ onOpenDemoModal, prefilledRecord }) {
     const validationErrors = [];
 
     if (!applicationNumber.trim()) {
-      validationErrors.push('Enter your demonstration application number.');
+      validationErrors.push({
+        text: 'Enter the application number shown on your demonstration record.',
+        href: '#applicationNumber'
+      });
       setHasAppError(true);
     }
 
     if (!dateOfBirth.trim()) {
-      validationErrors.push('Enter your date of birth.');
+      validationErrors.push({
+        text: 'Enter your date of birth.',
+        href: '#dateOfBirth'
+      });
       setHasDobError(true);
     }
 
@@ -65,16 +72,13 @@ export default function Login({ onOpenDemoModal, prefilledRecord }) {
     setIsLoading(true);
 
     try {
-      // Call separated service layer
       const result = await getApplicationStatus(applicationNumber, dateOfBirth);
 
       if (result.success && result.application) {
-        // Navigate to dynamic status result view
         navigate(`/application-status/${encodeURIComponent(result.application.applicationNumber)}`, {
           state: { application: result.application }
         });
       } else {
-        // Business logic error state as specified
         if (result.error === 'NOT_FOUND') {
           setErrors(['We could not find a matching demonstration application.']);
           setHasAppError(true);
@@ -108,47 +112,63 @@ export default function Login({ onOpenDemoModal, prefilledRecord }) {
 
             {/* Desktop Left Secondary Navigation */}
             <aside className="gov-sidebar" aria-label="Secondary navigation">
-              <nav className="gov-sidebar-nav">
-                <div className="gov-sidebar-header">Immigration and Visa</div>
-                <ul className="gov-sidebar-list">
-                  <li className="gov-sidebar-item">
-                    <Link to="/" className="gov-sidebar-link">Overview</Link>
-                  </li>
-                  <li className="gov-sidebar-item">
-                    <Link to="/services#visitor" className="gov-sidebar-link">Visit</Link>
-                  </li>
-                  <li className="gov-sidebar-item">
-                    <Link to="/services#study" className="gov-sidebar-link">Study</Link>
-                  </li>
-                  <li className="gov-sidebar-item">
-                    <Link to="/services#work" className="gov-sidebar-link">Work</Link>
-                  </li>
-                  <li className="gov-sidebar-item">
-                    <Link to="/services#pr" className="gov-sidebar-link">Permanent Residence</Link>
-                  </li>
-                  <li className="gov-sidebar-item">
-                    <Link to="/login" className="gov-sidebar-link active">Application Status</Link>
-                  </li>
-                  <li className="gov-sidebar-item">
-                    <Link to="/help" className="gov-sidebar-link">Help &amp; FAQ</Link>
-                  </li>
-                </ul>
-              </nav>
+              
+              {/* Mobile Collapsible Button */}
+              <button 
+                type="button" 
+                className="gov-sidebar-mobile-toggle"
+                onClick={() => setMobileSidebarOpen(!mobileSidebarOpen)}
+                aria-expanded={mobileSidebarOpen}
+              >
+                <span>Immigration and Visa Menu</span>
+                <span>{mobileSidebarOpen ? '▲' : '▼'}</span>
+              </button>
 
-              {/* Sample Data Helper Box */}
-              <div className="gov-alert" style={{ borderLeftColor: 'var(--color-blue-link)', padding: '14px', background: '#FFFFFF', border: '1px solid var(--color-gray-border)', borderLeftWidth: '4px' }}>
-                <h3 style={{ fontSize: '0.9375rem', marginTop: 0, marginBottom: '6px' }}>Need sample test data?</h3>
-                <p className="text-small" style={{ marginBottom: '10px' }}>
-                  Select any of the 10 fictional demonstration records to auto-populate this form.
-                </p>
-                <button 
-                  type="button" 
-                  className="btn btn-secondary btn-sm" 
-                  style={{ width: '100%' }}
-                  onClick={onOpenDemoModal}
-                >
-                  View 10 Demo Records
-                </button>
+              <div className={`gov-sidebar-content ${mobileSidebarOpen ? 'open' : ''}`}>
+                <nav className="gov-sidebar-nav">
+                  <div className="gov-sidebar-title">Immigration and Visa</div>
+                  <ul className="gov-sidebar-list">
+                    <li className="gov-sidebar-item">
+                      <Link to="/" className="gov-sidebar-link">Overview</Link>
+                    </li>
+                    <li className="gov-sidebar-item">
+                      <Link to="/services#visitor" className="gov-sidebar-link">Visit</Link>
+                    </li>
+                    <li className="gov-sidebar-item">
+                      <Link to="/services#study" className="gov-sidebar-link">Study</Link>
+                    </li>
+                    <li className="gov-sidebar-item">
+                      <Link to="/services#work" className="gov-sidebar-link">Work</Link>
+                    </li>
+                    <li className="gov-sidebar-item">
+                      <Link to="/services#pr" className="gov-sidebar-link">Permanent Residence</Link>
+                    </li>
+                    <li className="gov-sidebar-item">
+                      <Link to="/login" className="gov-sidebar-link active">Application Status</Link>
+                    </li>
+                    <li className="gov-sidebar-item">
+                      <Link to="/help" className="gov-sidebar-link">Help &amp; FAQ</Link>
+                    </li>
+                  </ul>
+                </nav>
+
+                {/* Sample Test Records Card */}
+                <div className="gov-alert" style={{ borderLeftColor: 'var(--color-blue-link)', padding: '16px', background: '#FFFFFF', border: '1px solid var(--color-gray-border)', borderLeftWidth: '4px' }}>
+                  <h3 style={{ fontSize: '0.9375rem', marginTop: 0, marginBottom: '6px' }}>
+                    Need sample test data?
+                  </h3>
+                  <p className="text-small" style={{ marginBottom: '12px' }}>
+                    Select any of the 10 fictional demonstration records to auto-populate this form.
+                  </p>
+                  <button 
+                    type="button" 
+                    className="btn btn-secondary btn-sm" 
+                    style={{ width: '100%' }}
+                    onClick={onOpenDemoModal}
+                  >
+                    View 10 Demo Records
+                  </button>
+                </div>
               </div>
             </aside>
 
@@ -156,129 +176,128 @@ export default function Login({ onOpenDemoModal, prefilledRecord }) {
             <section className="gov-main-body" aria-labelledby="statusHeading">
               <h1 id="statusHeading">Check your application status</h1>
               <p className="lead-text">
-                Enter your demonstration details below to view file progress and status history.
+                Enter your application details below to view the status and progress history of a demonstration application.
               </p>
 
-              {/* Canada.ca Error Summary Box */}
-              <ErrorSummary errors={errors} />
-
-              {/* Form Section */}
-              <form className="gov-form" onSubmit={handleSubmit} noValidate>
+              {/* Form Section Constrained to Max 650px */}
+              <div className="gov-form-container">
                 
-                {/* Application Number Input */}
-                <div className={`gov-form-group ${hasAppError ? 'has-error' : ''}`}>
-                  <label htmlFor="applicationNumber" className="gov-form-label">
-                    Application number
-                  </label>
-                  <span className="gov-form-hint" id="appHint">
-                    Example: <code>DEMO-2026-001</code> to <code>DEMO-2026-010</code>
-                  </span>
-                  {hasAppError && (
-                    <span className="gov-form-error-msg">Please enter a valid demonstration application number.</span>
-                  )}
-                  <input 
-                    type="text" 
-                    id="applicationNumber" 
-                    name="applicationNumber" 
-                    className="gov-form-input" 
-                    placeholder="DEMO-2026-001" 
-                    aria-describedby="appHint"
-                    value={applicationNumber}
-                    onChange={(e) => setApplicationNumber(e.target.value)}
-                    disabled={isLoading}
-                    autoComplete="off"
-                    maxLength={20}
-                  />
-                </div>
+                {/* Canada.ca Error Summary Box */}
+                <ErrorSummary errors={errors} />
 
-                {/* Date of Birth Input */}
-                <div className={`gov-form-group ${hasDobError ? 'has-error' : ''}`}>
-                  <label htmlFor="dateOfBirth" className="gov-form-label">
-                    Date of birth
-                  </label>
-                  <span className="gov-form-hint" id="dobHint">
-                    Format: <code>DD / MM / YYYY</code> or <code>YYYY-MM-DD</code>
-                  </span>
-                  {hasDobError && (
-                    <span className="gov-form-error-msg">Please enter the matching date of birth on file.</span>
-                  )}
-                  <input 
-                    type="text" 
-                    id="dateOfBirth" 
-                    name="dateOfBirth" 
-                    className="gov-form-input" 
-                    placeholder="01 / 01 / 2000" 
-                    aria-describedby="dobHint"
-                    value={dateOfBirth}
-                    onChange={(e) => setDateOfBirth(e.target.value)}
-                    disabled={isLoading}
-                    autoComplete="off"
-                  />
-                </div>
-
-                {/* Loading Indicator State */}
-                {isLoading && (
-                  <div 
-                    className="gov-alert gov-alert-info" 
-                    style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: '12px 16px' }}
-                    role="status"
-                  >
-                    <div 
-                      style={{
-                        width: '18px',
-                        height: '18px',
-                        border: '3px solid #D6D6D6',
-                        borderTopColor: 'var(--color-blue-link)',
-                        borderRadius: '50%',
-                        animation: 'spin 0.8s linear infinite',
-                        flexShrink: 0
-                      }}
-                      aria-hidden="true"
-                    />
-                    <style>{`
-                      @keyframes spin {
-                        0% { transform: rotate(0deg); }
-                        100% { transform: rotate(360deg); }
-                      }
-                    `}</style>
-                    <span style={{ fontWeight: '600', color: 'var(--color-blue-dark)' }}>
-                      Checking application status...
+                <form onSubmit={handleSubmit} noValidate>
+                  
+                  {/* Field 1: APPLICATION NUMBER */}
+                  <div className={`gov-form-group ${hasAppError ? 'has-error' : ''}`}>
+                    <label htmlFor="applicationNumber" className="gov-form-label">
+                      Application number
+                    </label>
+                    <span className="gov-form-hint" id="appHint">
+                      Enter the application number shown on your demonstration record (Example: <code>DEMO-2026-001</code>).
                     </span>
+                    {hasAppError && (
+                      <span className="gov-form-error-msg">
+                        Please enter a valid demonstration application number.
+                      </span>
+                    )}
+                    <input 
+                      type="text" 
+                      id="applicationNumber" 
+                      name="applicationNumber" 
+                      className="gov-form-input" 
+                      placeholder="DEMO-2026-001" 
+                      aria-describedby="appHint"
+                      value={applicationNumber}
+                      onChange={(e) => setApplicationNumber(e.target.value)}
+                      disabled={isLoading}
+                      autoComplete="off"
+                      maxLength={20}
+                    />
                   </div>
-                )}
 
-                {/* Submit & Secondary Buttons */}
-                <div className="btn-group">
-                  <button 
-                    type="submit" 
-                    className="btn btn-primary"
-                    disabled={isLoading}
-                  >
-                    {isLoading ? 'Checking...' : 'Sign in'}
-                  </button>
-                  <button 
-                    type="button" 
-                    className="btn btn-secondary"
-                    onClick={onOpenDemoModal}
-                    disabled={isLoading}
-                  >
-                    View demo applications
-                  </button>
-                </div>
+                  {/* Field 2: DATE OF BIRTH */}
+                  <div className={`gov-form-group ${hasDobError ? 'has-error' : ''}`}>
+                    <label htmlFor="dateOfBirth" className="gov-form-label">
+                      Date of birth
+                    </label>
+                    <span className="gov-form-hint" id="dobHint">
+                      Format: <code>DD / MM / YYYY</code>
+                    </span>
+                    {hasDobError && (
+                      <span className="gov-form-error-msg">
+                        Please enter the date of birth matching this demonstration record.
+                      </span>
+                    )}
+                    <input 
+                      type="text" 
+                      id="dateOfBirth" 
+                      name="dateOfBirth" 
+                      className="gov-form-input" 
+                      placeholder="DD / MM / YYYY" 
+                      aria-describedby="dobHint"
+                      value={dateOfBirth}
+                      onChange={(e) => setDateOfBirth(e.target.value)}
+                      disabled={isLoading}
+                      autoComplete="off"
+                    />
+                  </div>
 
-                {/* Explicit Disclaimer Subtext */}
-                <p className="text-small" style={{ marginTop: '14px', color: 'var(--color-text-muted)' }}>
-                  <strong>Demo application data only.</strong> This prototype does not connect to any government system or require authentic GCKey credentials.
-                </p>
+                  {/* Loading State Spinner */}
+                  {isLoading && (
+                    <div 
+                      className="gov-alert gov-alert-info" 
+                      style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: '14px 18px', margin: '16px 0' }}
+                      role="status"
+                    >
+                      <div 
+                        style={{
+                          width: '20px',
+                          height: '20px',
+                          border: '3px solid #D9DDE1',
+                          borderTopColor: 'var(--color-blue-link)',
+                          borderRadius: '50%',
+                          animation: 'govSpin 0.75s linear infinite',
+                          flexShrink: 0
+                        }}
+                        aria-hidden="true"
+                      />
+                      <style>{`
+                        @keyframes govSpin {
+                          0% { transform: rotate(0deg); }
+                          100% { transform: rotate(360deg); }
+                        }
+                      `}</style>
+                      <span style={{ fontWeight: 600, color: 'var(--color-blue-hover)', fontSize: '1rem' }}>
+                        Checking application status...
+                      </span>
+                    </div>
+                  )}
 
-              </form>
+                  {/* Action Buttons: Primary [ Check status ] & Secondary [ View demo applications ] */}
+                  <div className="btn-group" style={{ marginTop: '24px' }}>
+                    <button 
+                      type="submit" 
+                      className="btn btn-primary"
+                      disabled={isLoading}
+                    >
+                      {isLoading ? 'Checking...' : 'Check status'}
+                    </button>
+                    <button 
+                      type="button" 
+                      className="btn btn-secondary"
+                      onClick={onOpenDemoModal}
+                      disabled={isLoading}
+                    >
+                      View demo applications
+                    </button>
+                  </div>
 
-              {/* Informational Guidance Box */}
-              <div className="gov-alert gov-alert-info" style={{ marginTop: '36px' }}>
-                <h3 className="gov-alert-title">About this demonstration status verification</h3>
-                <p>
-                  This portal demonstrates a realistic public-service authentication and file verification flow. All 10 demo profiles feature distinct milestones including biometrics requirements, background verification, document requests, approval, and refusal.
-                </p>
+                  {/* Demo Disclaimer Subtext */}
+                  <p className="text-small" style={{ marginTop: '16px', color: 'var(--color-text-secondary)' }}>
+                    <strong>Demo application data only.</strong> This prototype does not connect to any government system or require authentic GCKey credentials.
+                  </p>
+
+                </form>
               </div>
 
             </section>
