@@ -1,23 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useLocation, useNavigate, Link } from 'react-router-dom';
 import Breadcrumbs from '../components/Breadcrumbs';
-import StatusBadge from '../components/StatusBadge';
-import Timeline from '../components/Timeline';
-import ApplicationDetails from '../components/ApplicationDetails';
 import { getApplicationByNumber } from '../services/applicationService';
 
 /**
- * Production-Quality Application Status Result Page
- * 
- * Complete visual overhaul implementing:
- * 1. Top breadcrumb & header with [ DEMONSTRATION RECORD ] badge
- * 2. Large status hero summary panel with prominent status badge
- * 3. 2-column clean information details grid
- * 4. Dedicated "What this status means" blue information panel
- * 5. Dedicated "What happens next" demonstration workflow steps
- * 6. Vertical application progress timeline with connecting line
- * 7. Compact demonstration disclaimer
- * 8. Actions: [ Check another application ], [ Print demonstration record ]
+ * Application Details Page matching exact reference (Bottom-Left screen):
+ * - Left sidebar with "Application Status" active
+ * - Top title + "DEMONSTRATION RECORD" badge
+ * - Light blue Hero Summary Card with large document icon, name, status, file #, stage & progress bar
+ * - Two-column section: "Application details" table on left, "Application progress" timeline on right
+ * - Two bottom side-by-side cards: "What this status means" & "Next steps"
  */
 export default function ApplicationStatus() {
   const { id } = useParams();
@@ -27,6 +19,7 @@ export default function ApplicationStatus() {
   const [application, setApplication] = useState(location.state?.application || null);
   const [loading, setLoading] = useState(!application);
   const [notFound, setNotFound] = useState(false);
+  const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
 
   useEffect(() => {
     if (!application && id) {
@@ -55,11 +48,11 @@ export default function ApplicationStatus() {
             { label: 'Application Status' }
           ]} 
         />
-        <main id="main-content" className="gov-main-content">
+        <main className="ca-main-content">
           <div className="gov-container">
-            <div className="gov-alert gov-alert-info" style={{ marginTop: '32px' }}>
-              <h2 className="gov-alert-title">Loading demonstration file...</h2>
-              <p>Please wait while your simulated application status is retrieved.</p>
+            <div className="ca-loading-card">
+              <div className="ca-spinner" aria-hidden="true" />
+              <span>Loading demonstration file...</span>
             </div>
           </div>
         </main>
@@ -78,14 +71,14 @@ export default function ApplicationStatus() {
             { label: 'Not Found' }
           ]} 
         />
-        <main id="main-content" className="gov-main-content">
+        <main className="ca-main-content">
           <div className="gov-container">
-            <div className="gov-alert gov-alert-error" style={{ marginTop: '32px' }}>
-              <h2 className="gov-alert-title">Demonstration application not found</h2>
-              <p>We could not locate demonstration record "{id}". Please check the application number.</p>
-              <div style={{ marginTop: '20px' }}>
-                <Link to="/login" className="btn btn-primary">Check another application</Link>
-              </div>
+            <div className="ca-error-box">
+              <h2>Demonstration file not found</h2>
+              <p>We could not locate demonstration file "{id}".</p>
+              <Link to="/login" className="ca-btn ca-btn-primary" style={{ marginTop: '16px' }}>
+                Check another application
+              </Link>
             </div>
           </div>
         </main>
@@ -93,32 +86,35 @@ export default function ApplicationStatus() {
     );
   }
 
-  // Determine dynamic next steps based on application status
-  const normalizedStatus = application.status.toLowerCase();
-  let nextSteps = [
-    { num: '1', title: 'Application review', desc: 'Processing officer verifies documents and eligibility criteria (Demonstration).' },
-    { num: '2', title: 'Background verification', desc: 'Inter-agency identity, criminal, and security screenings are conducted.' },
-    { num: '3', title: 'Final decision', desc: 'Designated supervisory officer issues the official determination notification.' }
-  ];
+  // Calculate current stage progress out of 5
+  const timeline = application.timeline || [];
+  const totalSteps = timeline.length || 5;
+  const currentStepIndex = timeline.findIndex(t => t.status === 'current' || t.status === 'action_required');
+  const currentStepNum = currentStepIndex !== -1 ? currentStepIndex + 1 : (application.status.includes('Approved') || application.status.includes('Refused') ? totalSteps : 1);
+  const progressPercent = Math.min(100, Math.round((currentStepNum / totalSteps) * 100));
 
-  if (normalizedStatus.includes('approved')) {
-    nextSteps = [
-      { num: '1', title: 'Approval confirmation', desc: 'Simulated positive decision recorded in the demonstration profile.' },
-      { num: '2', title: 'Document issuance', desc: 'Counterfoil simulation or electronic travel authorization issued.' },
-      { num: '3', title: 'File closed', desc: 'Intake and evaluation process concluded successfully.' }
-    ];
-  } else if (normalizedStatus.includes('refused')) {
-    nextSteps = [
-      { num: '1', title: 'Decision registered', desc: 'Simulated refusal determination finalized under demonstration rules.' },
-      { num: '2', title: 'Explanation documented', desc: 'Detailed refusal findings archived for prototype review.' },
-      { num: '3', title: 'File archived', desc: 'Application file formally closed in demonstration database.' }
-    ];
-  } else if (normalizedStatus.includes('required') || normalizedStatus.includes('documents')) {
-    nextSteps = [
-      { num: '1', title: 'Applicant submission', desc: 'Provide requested supplementary documents or attend biometric enrolment.' },
-      { num: '2', title: 'Material verification', desc: 'Reviewing officer verifies submitted records upon arrival.' },
-      { num: '3', title: 'Evaluation resumed', desc: 'Application proceeds towards final determination.' }
-    ];
+  // Determine status dot color
+  let statusDotColor = '#2563EB'; // blue default
+  let statusBadgeBg = '#E0EDFA';
+  let statusBadgeText = '#1D4ED8';
+
+  const normalized = application.status.toLowerCase();
+  if (normalized.includes('approved')) {
+    statusDotColor = '#16A34A';
+    statusBadgeBg = '#DCFCE7';
+    statusBadgeText = '#15803D';
+  } else if (normalized.includes('refused')) {
+    statusDotColor = '#DC2626';
+    statusBadgeBg = '#FEE2E2';
+    statusBadgeText = '#B91C1C';
+  } else if (normalized.includes('required') || normalized.includes('warning') || normalized.includes('documents')) {
+    statusDotColor = '#EA580C';
+    statusBadgeBg = '#FFEDD5';
+    statusBadgeText = '#C2410C';
+  } else if (normalized.includes('received')) {
+    statusDotColor = '#0284C7';
+    statusBadgeBg = '#E0F2FE';
+    statusBadgeText = '#0369A1';
   }
 
   return (
@@ -128,131 +124,290 @@ export default function ApplicationStatus() {
           { label: 'Home', url: '/' },
           { label: 'Immigration and Visa', url: '/' },
           { label: 'Application Status', url: '/login' },
-          { label: `Application Details (${application.applicationNumber})` }
+          { label: 'Application Details' }
         ]} 
       />
 
-      <main id="main-content" className="gov-main-content">
+      <main id="main-content" className="ca-main-content">
         <div className="gov-container">
+          <div className="ca-layout-with-sidebar">
 
-          {/* Top Header Row with Demonstration Badge */}
-          <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', flexWrap: 'wrap', gap: '16px', marginBottom: '8px' }}>
-            <div>
-              <h1 style={{ marginBottom: '6px' }}>Application status</h1>
-              <p className="lead-text" style={{ marginBottom: 0 }}>
-                Simulated public-service tracking record for demonstration purposes.
-              </p>
-            </div>
-            <div style={{ alignSelf: 'center' }}>
-              <span className="gov-badge gov-badge-demo" style={{ padding: '6px 14px', fontSize: '0.8125rem' }}>
-                DEMONSTRATION RECORD
-              </span>
-            </div>
-          </div>
+            {/* Left Sidebar (Exact layout matching screenshot) */}
+            <aside className="ca-sidebar" aria-label="Secondary navigation">
+              
+              <button 
+                type="button" 
+                className="ca-sidebar-mobile-toggle"
+                onClick={() => setMobileSidebarOpen(!mobileSidebarOpen)}
+                aria-expanded={mobileSidebarOpen}
+              >
+                <span>Immigration and Visa Menu</span>
+                <span>{mobileSidebarOpen ? '▲' : '▼'}</span>
+              </button>
 
-          {/* 17. STATUS HERO / SUMMARY PANEL */}
-          <section className="gov-status-hero-card" aria-labelledby="statusHeroHeading">
-            <div className="gov-status-hero-header" id="statusHeroHeading">
-              Application Status Overview
-            </div>
-            
-            <div className="gov-status-hero-name">
-              {application.applicantName}
-            </div>
-            
-            <div className="gov-status-hero-meta">
-              <strong>{application.applicationType}</strong> &bull; File #{application.applicationNumber}
-            </div>
-
-            {/* Current Status Highlight: Most prominent element */}
-            <div className="gov-status-hero-current">
-              <div>
-                <span className="gov-status-hero-current-label">Current Status</span>
-                <StatusBadge status={application.status} size="large" />
+              <div className={`ca-sidebar-card ${mobileSidebarOpen ? 'open' : ''}`}>
+                <div className="ca-sidebar-heading">Immigration and Visa</div>
+                <ul className="ca-sidebar-nav-list">
+                  <li>
+                    <Link to="/" className="ca-sidebar-nav-item">Overview</Link>
+                  </li>
+                  <li>
+                    <Link to="/services#visitor" className="ca-sidebar-nav-item">Visit</Link>
+                  </li>
+                  <li>
+                    <Link to="/services#study" className="ca-sidebar-nav-item">Study</Link>
+                  </li>
+                  <li>
+                    <Link to="/services#work" className="ca-sidebar-nav-item">Work</Link>
+                  </li>
+                  <li>
+                    <Link to="/services#pr" className="ca-sidebar-nav-item">Permanent Residence</Link>
+                  </li>
+                  <li>
+                    <Link to="/login" className="ca-sidebar-nav-item active">
+                      Application Status
+                    </Link>
+                  </li>
+                  <li>
+                    <Link to="/services" className="ca-sidebar-nav-item">Processing Information</Link>
+                  </li>
+                  <li>
+                    <Link to="/help" className="ca-sidebar-nav-item">Help &amp; FAQ</Link>
+                  </li>
+                </ul>
               </div>
-              <div className="gov-status-hero-updated">
-                <strong>Last updated:</strong> {application.lastUpdated}
-              </div>
-            </div>
-          </section>
+            </aside>
 
-          {/* 19. APPLICATION DETAILS (2-Column Clean Information Grid) */}
-          <ApplicationDetails application={application} />
-
-          {/* 21. CURRENT STATUS MESSAGE (Blue Left Border Information Panel) */}
-          <section className="gov-alert gov-alert-info" style={{ marginTop: '28px', marginBottom: '32px' }} aria-labelledby="statusMeaningHeading">
-            <h2 className="gov-alert-title" id="statusMeaningHeading" style={{ fontSize: '1.25rem' }}>
-              What this status means
-            </h2>
-            <p style={{ fontSize: '1.0625rem', lineHeight: 1.6, marginBottom: application.actionRequired ? '16px' : 0 }}>
-              {application.statusDescription}
-            </p>
-
-            {application.actionRequired && (
-              <div style={{ backgroundColor: 'rgba(255, 255, 255, 0.7)', border: '1px solid var(--color-blue-border)', borderRadius: '3px', padding: '12px 16px', marginTop: '12px' }}>
-                <strong style={{ color: 'var(--color-blue-hover)', display: 'block', marginBottom: '4px' }}>
-                  Action item:
-                </strong>
-                <span style={{ color: 'var(--color-text-primary)' }}>
-                  {application.actionRequired}
-                </span>
-              </div>
-            )}
-          </section>
-
-          {/* 20. TIMELINE (Dedicated Progress Section) */}
-          <Timeline timeline={application.timeline} />
-
-          {/* 22. WHAT HAPPENS NEXT (Demonstration Workflow) */}
-          <section className="gov-next-steps-section" style={{ marginTop: '36px', marginBottom: '36px' }} aria-labelledby="nextStepsHeading">
-            <h2 id="nextStepsHeading">What happens next</h2>
-            <p className="text-small" style={{ color: 'var(--color-text-secondary)', marginBottom: '16px' }}>
-              Demonstration workflow sequence for this file category:
-            </p>
-            <div className="gov-next-steps-grid">
-              {nextSteps.map(step => (
-                <div key={step.num} className="gov-next-step-card">
-                  <div className="gov-next-step-number">{step.num}</div>
-                  <h3 className="gov-next-step-title">{step.title}</h3>
-                  <p>{step.desc}</p>
+            {/* Right Main Content */}
+            <section className="ca-main-body" aria-labelledby="statusTitle">
+              
+              {/* Top Title & DEMONSTRATION RECORD badge */}
+              <div className="ca-status-header-row">
+                <div>
+                  <h1 id="statusTitle" className="ca-page-title" style={{ marginBottom: '4px' }}>
+                    Application status
+                  </h1>
+                  <p className="ca-page-desc" style={{ marginBottom: 0 }}>
+                    Simulated public-service tracking record for demonstration purposes.
+                  </p>
                 </div>
-              ))}
-            </div>
-          </section>
+                <div>
+                  <span className="ca-badge-demo-record">
+                    DEMONSTRATION RECORD
+                  </span>
+                </div>
+              </div>
 
-          {/* 24. DEMONSTRATION NOTICE (Restrained, non-overpowering) */}
-          <div className="gov-alert" style={{ borderLeftColor: 'var(--color-gray-dark)', backgroundColor: 'var(--color-gray-surface)', margin: '32px 0 24px 0' }}>
-            <p style={{ margin: 0, fontSize: '0.9375rem', color: 'var(--color-text-secondary)' }}>
-              <strong>Notice:</strong> This status is fictional demonstration data and does not represent a real immigration application. For official Canadian visa status inquiries, please consult the official IRCC portal at <a href="https://www.canada.ca/en/immigration-refugees-citizenship.html" target="_blank" rel="noopener noreferrer">canada.ca/immigration</a>.
-            </p>
+              {/* HERO SUMMARY CARD (Light Blue / Gradient Background) */}
+              <div className="ca-summary-hero-card">
+                
+                {/* Big Document Icon */}
+                <div className="ca-summary-hero-icon-wrap" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="#005EA8" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                    <polyline points="14 2 14 8 20 8"></polyline>
+                    <line x1="16" y1="13" x2="8" y2="13"></line>
+                    <line x1="16" y1="17" x2="8" y2="17"></line>
+                    <polyline points="10 9 9 9 8 9"></polyline>
+                  </svg>
+                </div>
+
+                {/* Middle: Name, Status Badge, Subtitle & Last Updated */}
+                <div className="ca-summary-hero-middle">
+                  <div className="ca-summary-hero-name-row">
+                    <span className="ca-summary-hero-name">{application.applicantName}</span>
+                    <span 
+                      className="ca-summary-hero-badge"
+                      style={{ backgroundColor: statusBadgeBg, color: statusBadgeText }}
+                    >
+                      <span className="ca-badge-dot" style={{ backgroundColor: statusDotColor }} aria-hidden="true"></span>
+                      <span>{application.status}</span>
+                    </span>
+                  </div>
+                  <div className="ca-summary-hero-details">
+                    <span>{application.applicationType}</span>
+                    <span className="ca-summary-hero-sep">|</span>
+                    <span>{application.applicationNumber}</span>
+                  </div>
+                  <div className="ca-summary-hero-updated">
+                    Last updated: {application.lastUpdated}
+                  </div>
+                </div>
+
+                {/* Right: Current stage and Progress bar */}
+                <div className="ca-summary-hero-stage">
+                  <span className="ca-stage-label">Current stage</span>
+                  <span className="ca-stage-value">{application.currentStage}</span>
+                  <div className="ca-stage-progress-bar-bg" aria-hidden="true">
+                    <div 
+                      className="ca-stage-progress-bar-fill" 
+                      style={{ width: `${progressPercent}%` }}
+                    />
+                  </div>
+                  <span className="ca-stage-step-text">
+                    Step {currentStepNum} of {totalSteps}
+                  </span>
+                </div>
+
+              </div>
+
+              {/* TWO-COLUMN SECTION: Details Table (Left) + Timeline (Right) */}
+              <div className="ca-status-two-col-grid">
+                
+                {/* Left Card: Application details */}
+                <div className="ca-card-box">
+                  <h2 className="ca-card-box-title">Application details</h2>
+                  <div className="ca-details-rows">
+                    <div className="ca-details-row">
+                      <span className="ca-details-key">Application type</span>
+                      <span className="ca-details-val">{application.applicationType}</span>
+                    </div>
+                    <div className="ca-details-row">
+                      <span className="ca-details-key">Application number</span>
+                      <span className="ca-details-val">{application.applicationNumber}</span>
+                    </div>
+                    <div className="ca-details-row">
+                      <span className="ca-details-key">Submission date</span>
+                      <span className="ca-details-val">{application.submissionDate}</span>
+                    </div>
+                    <div className="ca-details-row">
+                      <span className="ca-details-key">Last updated</span>
+                      <span className="ca-details-val">{application.lastUpdated}</span>
+                    </div>
+                    <div className="ca-details-row">
+                      <span className="ca-details-key">Current stage</span>
+                      <span className="ca-details-val">{application.currentStage}</span>
+                    </div>
+                    <div className="ca-details-row">
+                      <span className="ca-details-key">Status</span>
+                      <span className="ca-details-val" style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
+                        <span style={{ display: 'inline-block', width: '8px', height: '8px', borderRadius: '50%', backgroundColor: statusDotColor }} aria-hidden="true"></span>
+                        {application.status}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Right Card: Application progress Timeline */}
+                <div className="ca-card-box">
+                  <h2 className="ca-card-box-title">Application progress</h2>
+                  <div className="ca-timeline-list">
+                    {timeline.map((step, idx) => {
+                      const isCompleted = step.status === 'completed';
+                      const isCurrent = step.status === 'current' || step.status === 'action_required';
+                      
+                      return (
+                        <div key={idx} className={`ca-timeline-step ${step.status}`}>
+                          
+                          {/* Marker Icon */}
+                          <div className="ca-timeline-marker-wrap">
+                            {isCompleted ? (
+                              <div className="ca-marker-completed" aria-hidden="true">
+                                <svg width="12" height="12" viewBox="0 0 20 20" fill="#FFFFFF">
+                                  <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                                </svg>
+                              </div>
+                            ) : isCurrent ? (
+                              <div className="ca-marker-current" aria-hidden="true">
+                                <div className="ca-marker-current-dot" />
+                              </div>
+                            ) : (
+                              <div className="ca-marker-pending" aria-hidden="true" />
+                            )}
+                            {idx < timeline.length - 1 && <div className="ca-marker-line" aria-hidden="true" />}
+                          </div>
+
+                          {/* Content */}
+                          <div className="ca-timeline-content">
+                            <div className="ca-timeline-step-header">
+                              <span className="ca-timeline-step-title">{step.title}</span>
+                              {isCurrent && (
+                                <span className="ca-timeline-badge-inprogress">
+                                  {step.status === 'action_required' ? 'Action required' : 'In progress'}
+                                </span>
+                              )}
+                              {!isCompleted && !isCurrent && (
+                                <span className="ca-timeline-badge-pending">Pending</span>
+                              )}
+                            </div>
+                            <div className="ca-timeline-step-date">
+                              {step.date || (isCurrent ? 'In progress' : 'Pending')}
+                            </div>
+                          </div>
+
+                          {/* Right Chevron */}
+                          <div className="ca-timeline-chevron" aria-hidden="true">
+                            &rsaquo;
+                          </div>
+
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+
+              </div>
+
+              {/* TWO BOTTOM INFORMATIONAL CARDS: What this status means & Next steps */}
+              <div className="ca-bottom-info-cards">
+                
+                {/* Left: What this status means */}
+                <div className="ca-info-card">
+                  <div className="ca-info-card-header">
+                    <div className="ca-info-card-icon" aria-hidden="true">
+                      <svg viewBox="0 0 20 20" fill="#005EA8" width="18" height="18">
+                        <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
+                      </svg>
+                    </div>
+                    <h3 className="ca-info-card-title">What this status means</h3>
+                  </div>
+                  <p className="ca-info-card-body">
+                    {application.statusDescription || "Your demonstration application is currently undergoing background verification. This step involves additional checks and review. This information is fictional and does not represent a real immigration application."}
+                  </p>
+                </div>
+
+                {/* Right: Next steps */}
+                <div className="ca-info-card">
+                  <div className="ca-info-card-header">
+                    <div className="ca-info-card-icon" aria-hidden="true">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="#005EA8" strokeWidth="2" width="18" height="18" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                        <polyline points="14 2 14 8 20 8"></polyline>
+                        <line x1="16" y1="13" x2="8" y2="13"></line>
+                        <line x1="16" y1="17" x2="8" y2="17"></line>
+                        <polyline points="10 9 9 9 8 9"></polyline>
+                      </svg>
+                    </div>
+                    <h3 className="ca-info-card-title">Next steps</h3>
+                  </div>
+                  <p className="ca-info-card-body">
+                    After {application.currentStage || "verification"}, your application will move to the final decision stage. We will update the status once this step is completed.
+                  </p>
+                </div>
+
+              </div>
+
+              {/* Action Buttons Below Cards */}
+              <div className="ca-status-actions" style={{ marginTop: '28px' }}>
+                <button 
+                  type="button" 
+                  className="ca-btn ca-btn-primary"
+                  onClick={() => navigate('/login')}
+                >
+                  Check another application &rarr;
+                </button>
+                <button 
+                  type="button" 
+                  className="ca-btn ca-btn-secondary"
+                  onClick={() => window.print()}
+                >
+                  Print demonstration record
+                </button>
+              </div>
+
+            </section>
+
           </div>
-
-          {/* Actions Bar */}
-          <div className="btn-group" style={{ marginTop: '24px', paddingBottom: '32px' }}>
-            <button 
-              type="button" 
-              className="btn btn-primary"
-              onClick={() => navigate('/login')}
-            >
-              Check another application
-            </button>
-            <button 
-              type="button" 
-              className="btn btn-secondary"
-              onClick={() => window.print()}
-            >
-              Print demonstration record
-            </button>
-            <a 
-              href="https://www.canada.ca/en/immigration-refugees-citizenship.html" 
-              target="_blank" 
-              rel="noopener noreferrer" 
-              className="btn btn-outline"
-            >
-              Official Canada.ca website &UpperRightArrow;
-            </a>
-          </div>
-
         </div>
       </main>
     </>

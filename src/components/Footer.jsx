@@ -51,7 +51,7 @@ export default function Footer({ onOpenDemoModal }) {
               <li><Link to="/help#disclaimer">Terms</Link></li>
               <li>
                 <a href="https://www.canada.ca/" target="_blank" rel="noopener noreferrer">
-                  Official Canada.ca website &UpperRightArrow;
+                  Official Canada.ca website &#x2197;
                 </a>
               </li>
             </ul>

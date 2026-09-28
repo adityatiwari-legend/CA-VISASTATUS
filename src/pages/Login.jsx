@@ -5,15 +5,11 @@ import ErrorSummary from '../components/ErrorSummary';
 import { getApplicationStatus } from '../services/applicationService';
 
 /**
- * Polished Government-Service Application Status Sign-In Page
- * 
- * Features:
- * - Proper H1 & descriptive lead
- * - Form container constrained to max-width: 650px
- * - Inputs with 50px height, 1px solid #7A7A7A, 16px text
- * - Canada.ca Error Summary box that pushes form down naturally
- * - Primary button [ Check status ] and secondary [ View demo applications ]
- * - Desktop sidebar secondary navigation with collapsible mobile support
+ * Status Verification / Sign In Page matching exact reference (Top-Right screen):
+ * - Clean left sidebar with "Application Status" active (red left bar + light blue background)
+ * - Blue information alert: "This is a demonstration service"
+ * - Application number & Date of birth inputs (with calendar icon)
+ * - [ Check status → ] and [ 📄 View demo applications ]
  */
 export default function Login({ onOpenDemoModal, prefilledRecord }) {
   const navigate = useNavigate();
@@ -58,7 +54,7 @@ export default function Login({ onOpenDemoModal, prefilledRecord }) {
 
     if (!dateOfBirth.trim()) {
       validationErrors.push({
-        text: 'Enter your date of birth.',
+        text: 'Enter your date of birth as shown on your demonstration record.',
         href: '#dateOfBirth'
       });
       setHasDobError(true);
@@ -106,17 +102,16 @@ export default function Login({ onOpenDemoModal, prefilledRecord }) {
         ]} 
       />
 
-      <main id="main-content" className="gov-main-content">
+      <main id="main-content" className="ca-main-content">
         <div className="gov-container">
-          <div className="gov-layout-with-sidebar">
+          <div className="ca-layout-with-sidebar">
 
-            {/* Desktop Left Secondary Navigation */}
-            <aside className="gov-sidebar" aria-label="Secondary navigation">
+            {/* Left Sidebar (Exact layout matching screenshot) */}
+            <aside className="ca-sidebar" aria-label="Secondary navigation">
               
-              {/* Mobile Collapsible Button */}
               <button 
                 type="button" 
-                className="gov-sidebar-mobile-toggle"
+                className="ca-sidebar-mobile-toggle"
                 onClick={() => setMobileSidebarOpen(!mobileSidebarOpen)}
                 aria-expanded={mobileSidebarOpen}
               >
@@ -124,181 +119,163 @@ export default function Login({ onOpenDemoModal, prefilledRecord }) {
                 <span>{mobileSidebarOpen ? '▲' : '▼'}</span>
               </button>
 
-              <div className={`gov-sidebar-content ${mobileSidebarOpen ? 'open' : ''}`}>
-                <nav className="gov-sidebar-nav">
-                  <div className="gov-sidebar-title">Immigration and Visa</div>
-                  <ul className="gov-sidebar-list">
-                    <li className="gov-sidebar-item">
-                      <Link to="/" className="gov-sidebar-link">Overview</Link>
-                    </li>
-                    <li className="gov-sidebar-item">
-                      <Link to="/services#visitor" className="gov-sidebar-link">Visit</Link>
-                    </li>
-                    <li className="gov-sidebar-item">
-                      <Link to="/services#study" className="gov-sidebar-link">Study</Link>
-                    </li>
-                    <li className="gov-sidebar-item">
-                      <Link to="/services#work" className="gov-sidebar-link">Work</Link>
-                    </li>
-                    <li className="gov-sidebar-item">
-                      <Link to="/services#pr" className="gov-sidebar-link">Permanent Residence</Link>
-                    </li>
-                    <li className="gov-sidebar-item">
-                      <Link to="/login" className="gov-sidebar-link active">Application Status</Link>
-                    </li>
-                    <li className="gov-sidebar-item">
-                      <Link to="/help" className="gov-sidebar-link">Help &amp; FAQ</Link>
-                    </li>
-                  </ul>
-                </nav>
-
-                {/* Sample Test Records Card */}
-                <div className="gov-alert" style={{ borderLeftColor: 'var(--color-blue-link)', padding: '16px', background: '#FFFFFF', border: '1px solid var(--color-gray-border)', borderLeftWidth: '4px' }}>
-                  <h3 style={{ fontSize: '0.9375rem', marginTop: 0, marginBottom: '6px' }}>
-                    Need sample test data?
-                  </h3>
-                  <p className="text-small" style={{ marginBottom: '12px' }}>
-                    Select any of the 10 fictional demonstration records to auto-populate this form.
-                  </p>
-                  <button 
-                    type="button" 
-                    className="btn btn-secondary btn-sm" 
-                    style={{ width: '100%' }}
-                    onClick={onOpenDemoModal}
-                  >
-                    View 10 Demo Records
-                  </button>
-                </div>
+              <div className={`ca-sidebar-card ${mobileSidebarOpen ? 'open' : ''}`}>
+                <div className="ca-sidebar-heading">Immigration and Visa</div>
+                <ul className="ca-sidebar-nav-list">
+                  <li>
+                    <Link to="/" className="ca-sidebar-nav-item">Overview</Link>
+                  </li>
+                  <li>
+                    <Link to="/services#visitor" className="ca-sidebar-nav-item">Visit</Link>
+                  </li>
+                  <li>
+                    <Link to="/services#study" className="ca-sidebar-nav-item">Study</Link>
+                  </li>
+                  <li>
+                    <Link to="/services#work" className="ca-sidebar-nav-item">Work</Link>
+                  </li>
+                  <li>
+                    <Link to="/services#pr" className="ca-sidebar-nav-item">Permanent Residence</Link>
+                  </li>
+                  <li>
+                    <Link to="/login" className="ca-sidebar-nav-item active">
+                      Application Status
+                    </Link>
+                  </li>
+                  <li>
+                    <Link to="/services" className="ca-sidebar-nav-item">Processing Information</Link>
+                  </li>
+                  <li>
+                    <Link to="/help" className="ca-sidebar-nav-item">Help &amp; FAQ</Link>
+                  </li>
+                </ul>
               </div>
             </aside>
 
-            {/* Main Column */}
-            <section className="gov-main-body" aria-labelledby="statusHeading">
-              <h1 id="statusHeading">Check your application status</h1>
-              <p className="lead-text">
+            {/* Right Main Content */}
+            <section className="ca-main-body" aria-labelledby="statusHeading">
+              
+              <h1 id="statusHeading" className="ca-page-title">
+                Check your application status
+              </h1>
+              <p className="ca-page-desc">
                 Enter your application details below to view the status and progress history of a demonstration application.
               </p>
 
-              {/* Form Section Constrained to Max 650px */}
-              <div className="gov-form-container">
+              {/* Blue Alert: This is a demonstration service */}
+              <div className="ca-info-alert" role="status">
+                <div className="ca-info-alert-icon" aria-hidden="true">
+                  <svg viewBox="0 0 20 20" fill="#005EA8">
+                    <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
+                  </svg>
+                </div>
+                <div className="ca-info-alert-body">
+                  <div className="ca-info-alert-title">This is a demonstration service</div>
+                  <p className="ca-info-alert-text">
+                    Use the sample application numbers to explore how the status tracking works. This does not connect to any government system.
+                  </p>
+                </div>
+              </div>
+
+              {/* Error Summary if issues exist */}
+              <ErrorSummary errors={errors} />
+
+              {/* Form Controls */}
+              <form className="ca-status-form" onSubmit={handleSubmit} noValidate>
                 
-                {/* Canada.ca Error Summary Box */}
-                <ErrorSummary errors={errors} />
+                {/* Application number field */}
+                <div className={`ca-form-group ${hasAppError ? 'has-error' : ''}`}>
+                  <label htmlFor="applicationNumber" className="ca-form-label">
+                    Application number
+                  </label>
+                  <span className="ca-form-sublabel" id="appHelpText">
+                    Enter the application number shown on your demonstration record.
+                  </span>
+                  {hasAppError && (
+                    <div className="ca-form-error-msg">Please enter a valid application number.</div>
+                  )}
+                  <input 
+                    type="text" 
+                    id="applicationNumber" 
+                    className="ca-form-input" 
+                    placeholder="e.g. DEMO-2026-001"
+                    value={applicationNumber}
+                    onChange={(e) => setApplicationNumber(e.target.value)}
+                    disabled={isLoading}
+                    autoComplete="off"
+                    aria-describedby="appHelpText"
+                  />
+                </div>
 
-                <form onSubmit={handleSubmit} noValidate>
-                  
-                  {/* Field 1: APPLICATION NUMBER */}
-                  <div className={`gov-form-group ${hasAppError ? 'has-error' : ''}`}>
-                    <label htmlFor="applicationNumber" className="gov-form-label">
-                      Application number
-                    </label>
-                    <span className="gov-form-hint" id="appHint">
-                      Enter the application number shown on your demonstration record (Example: <code>DEMO-2026-001</code>).
-                    </span>
-                    {hasAppError && (
-                      <span className="gov-form-error-msg">
-                        Please enter a valid demonstration application number.
-                      </span>
-                    )}
-                    <input 
-                      type="text" 
-                      id="applicationNumber" 
-                      name="applicationNumber" 
-                      className="gov-form-input" 
-                      placeholder="DEMO-2026-001" 
-                      aria-describedby="appHint"
-                      value={applicationNumber}
-                      onChange={(e) => setApplicationNumber(e.target.value)}
-                      disabled={isLoading}
-                      autoComplete="off"
-                      maxLength={20}
-                    />
-                  </div>
-
-                  {/* Field 2: DATE OF BIRTH */}
-                  <div className={`gov-form-group ${hasDobError ? 'has-error' : ''}`}>
-                    <label htmlFor="dateOfBirth" className="gov-form-label">
-                      Date of birth
-                    </label>
-                    <span className="gov-form-hint" id="dobHint">
-                      Format: <code>DD / MM / YYYY</code>
-                    </span>
-                    {hasDobError && (
-                      <span className="gov-form-error-msg">
-                        Please enter the date of birth matching this demonstration record.
-                      </span>
-                    )}
+                {/* Date of birth field */}
+                <div className={`ca-form-group ${hasDobError ? 'has-error' : ''}`}>
+                  <label htmlFor="dateOfBirth" className="ca-form-label">
+                    Date of birth
+                  </label>
+                  <span className="ca-form-sublabel" id="dobHelpText">
+                    Enter your date of birth as shown on your demonstration record.
+                  </span>
+                  {hasDobError && (
+                    <div className="ca-form-error-msg">Please enter a valid date of birth.</div>
+                  )}
+                  <div className="ca-input-with-icon">
                     <input 
                       type="text" 
                       id="dateOfBirth" 
-                      name="dateOfBirth" 
-                      className="gov-form-input" 
-                      placeholder="DD / MM / YYYY" 
-                      aria-describedby="dobHint"
+                      className="ca-form-input" 
+                      placeholder="DD / MM / YYYY"
                       value={dateOfBirth}
                       onChange={(e) => setDateOfBirth(e.target.value)}
                       disabled={isLoading}
                       autoComplete="off"
+                      aria-describedby="dobHelpText"
                     />
+                    <span className="ca-input-calendar-icon" aria-hidden="true">
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#6B7280" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                        <line x1="16" y1="2" x2="16" y2="6"></line>
+                        <line x1="8" y1="2" x2="8" y2="6"></line>
+                        <line x1="3" y1="10" x2="21" y2="10"></line>
+                      </svg>
+                    </span>
                   </div>
+                </div>
 
-                  {/* Loading State Spinner */}
-                  {isLoading && (
-                    <div 
-                      className="gov-alert gov-alert-info" 
-                      style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: '14px 18px', margin: '16px 0' }}
-                      role="status"
-                    >
-                      <div 
-                        style={{
-                          width: '20px',
-                          height: '20px',
-                          border: '3px solid #D9DDE1',
-                          borderTopColor: 'var(--color-blue-link)',
-                          borderRadius: '50%',
-                          animation: 'govSpin 0.75s linear infinite',
-                          flexShrink: 0
-                        }}
-                        aria-hidden="true"
-                      />
-                      <style>{`
-                        @keyframes govSpin {
-                          0% { transform: rotate(0deg); }
-                          100% { transform: rotate(360deg); }
-                        }
-                      `}</style>
-                      <span style={{ fontWeight: 600, color: 'var(--color-blue-hover)', fontSize: '1rem' }}>
-                        Checking application status...
-                      </span>
-                    </div>
-                  )}
-
-                  {/* Action Buttons: Primary [ Check status ] & Secondary [ View demo applications ] */}
-                  <div className="btn-group" style={{ marginTop: '24px' }}>
-                    <button 
-                      type="submit" 
-                      className="btn btn-primary"
-                      disabled={isLoading}
-                    >
-                      {isLoading ? 'Checking...' : 'Check status'}
-                    </button>
-                    <button 
-                      type="button" 
-                      className="btn btn-secondary"
-                      onClick={onOpenDemoModal}
-                      disabled={isLoading}
-                    >
-                      View demo applications
-                    </button>
+                {/* Loading indicator */}
+                {isLoading && (
+                  <div className="ca-form-loading-state" role="status">
+                    <div className="ca-spinner" aria-hidden="true" />
+                    <span>Checking application status...</span>
                   </div>
+                )}
 
-                  {/* Demo Disclaimer Subtext */}
-                  <p className="text-small" style={{ marginTop: '16px', color: 'var(--color-text-secondary)' }}>
-                    <strong>Demo application data only.</strong> This prototype does not connect to any government system or require authentic GCKey credentials.
-                  </p>
+                {/* Form Buttons */}
+                <div className="ca-form-actions">
+                  <button 
+                    type="submit" 
+                    className="ca-btn ca-btn-primary"
+                    disabled={isLoading}
+                  >
+                    Check status &rarr;
+                  </button>
+                  <button 
+                    type="button" 
+                    className="ca-btn ca-btn-secondary ca-btn-with-icon"
+                    onClick={onOpenDemoModal}
+                    disabled={isLoading}
+                  >
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
+                      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                      <polyline points="14 2 14 8 20 8"></polyline>
+                      <line x1="16" y1="13" x2="8" y2="13"></line>
+                      <line x1="16" y1="17" x2="8" y2="17"></line>
+                      <polyline points="10 9 9 9 8 9"></polyline>
+                    </svg>
+                    <span>View demo applications</span>
+                  </button>
+                </div>
 
-                </form>
-              </div>
+              </form>
 
             </section>
 

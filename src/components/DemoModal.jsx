@@ -1,15 +1,28 @@
-import React, { useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import applicationsData from '../data/applications.json';
-import StatusBadge from './StatusBadge';
 
 /**
- * Professional Demo Application Records Modal Component
- * 
- * Title: Demo application records
- * Subtitle: Select a fictional record to automatically populate the status form.
- * Displays desktop table and turns into stacked cards on mobile.
+ * Screen 4: "Select a demonstration application" Modal
+ * Matches exact reference:
+ * - Clean dialog with header & close button
+ * - Table with radio button selection
+ * - Columns: [Radio], Application number, Applicant, Application type, Current status (with colored dot)
+ * - Selected row highlighted in soft blue (#EDF4FA)
+ * - Footer: [ Use selected application ] (Red) and [ Cancel ] (White/Outline)
  */
-export default function DemoModal({ isOpen, onClose, onSelectRecord }) {
+export default function DemoModal({ isOpen, onClose, onSelectRecord, initialSelectedId }) {
+  const [selectedAppNumber, setSelectedAppNumber] = useState(
+    initialSelectedId || applicationsData[0]?.applicationNumber || 'DEMO-2026-001'
+  );
+
+  useEffect(() => {
+    if (initialSelectedId) {
+      setSelectedAppNumber(initialSelectedId);
+    } else if (applicationsData.length > 0) {
+      setSelectedAppNumber(applicationsData[0].applicationNumber);
+    }
+  }, [initialSelectedId, isOpen]);
+
   // Close on Escape key press
   useEffect(() => {
     if (!isOpen) return;
@@ -22,9 +35,37 @@ export default function DemoModal({ isOpen, onClose, onSelectRecord }) {
 
   if (!isOpen) return null;
 
+  const handleConfirm = () => {
+    const record = applicationsData.find(a => a.applicationNumber === selectedAppNumber);
+    if (record) {
+      onSelectRecord(record);
+    }
+    onClose();
+  };
+
+  const getStatusMeta = (status) => {
+    const s = (status || '').toLowerCase();
+    if (s.includes('approved')) {
+      return { dotColor: '#16A34A', label: 'Approved — Demonstration Only' };
+    }
+    if (s.includes('refused')) {
+      return { dotColor: '#DC2626', label: 'Refused — Demonstration Only' };
+    }
+    if (s.includes('biometrics required') || s.includes('additional documents') || s.includes('action')) {
+      return { dotColor: '#D97706', label: status };
+    }
+    if (s.includes('processing')) {
+      return { dotColor: '#16A34A', label: status };
+    }
+    if (s.includes('received')) {
+      return { dotColor: '#2563EB', label: 'Application in progress' };
+    }
+    return { dotColor: '#2563EB', label: status };
+  };
+
   return (
     <div 
-      className="gov-modal-overlay" 
+      className="ca-modal-backdrop"
       role="dialog" 
       aria-modal="true" 
       aria-labelledby="modalTitle"
@@ -32,107 +73,103 @@ export default function DemoModal({ isOpen, onClose, onSelectRecord }) {
         if (e.target === e.currentTarget) onClose();
       }}
     >
-      <div className="gov-modal">
+      <div className="ca-modal-card">
         
         {/* Modal Header */}
-        <div className="gov-modal-header">
+        <div className="ca-modal-header">
           <div>
-            <h2 className="gov-modal-title" id="modalTitle">
-              Demo application records
+            <h2 className="ca-modal-title" id="modalTitle">
+              Select a demonstration application
             </h2>
-            <p className="text-small" style={{ margin: '4px 0 0 0', color: 'var(--color-text-secondary)' }}>
-              Select a fictional record to automatically populate the status form.
+            <p className="ca-modal-subtitle">
+              Choose a record below to automatically populate the form.
             </p>
           </div>
           <button 
             type="button" 
-            className="gov-modal-close" 
+            className="ca-modal-close-btn" 
             onClick={onClose} 
-            aria-label="Close demo applications dialog"
+            aria-label="Close dialog"
           >
-            &times;
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+              <line x1="18" y1="6" x2="6" y2="18"></line>
+              <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
           </button>
         </div>
 
-        {/* Modal Body */}
-        <div className="gov-modal-body">
-          
-          {/* Desktop Table View */}
-          <div className="gov-modal-table-container">
-            <table className="gov-table">
-              <thead>
-                <tr>
-                  <th scope="col">Application #</th>
-                  <th scope="col">Applicant</th>
-                  <th scope="col">Type</th>
-                  <th scope="col">Status</th>
-                  <th scope="col">DOB</th>
-                  <th scope="col" style={{ textAlign: 'right' }}>Action</th>
-                </tr>
-              </thead>
-              <tbody>
-                {applicationsData.map(app => (
-                  <tr key={app.applicationNumber}>
-                    <td><strong>{app.applicationNumber}</strong></td>
-                    <td>{app.applicantName}</td>
-                    <td>{app.applicationType}</td>
-                    <td><StatusBadge status={app.status} /></td>
-                    <td><code style={{ fontSize: '0.875rem' }}>{app.displayDob}</code></td>
-                    <td style={{ textAlign: 'right' }}>
-                      <button
-                        type="button"
-                        className="btn btn-secondary btn-sm"
-                        onClick={() => {
-                          onSelectRecord(app);
-                          onClose();
-                        }}
-                      >
-                        Use Record
-                      </button>
+        {/* Modal Body / Table */}
+        <div className="ca-modal-body">
+          <table className="ca-modal-table">
+            <thead>
+              <tr>
+                <th style={{ width: '44px', textAlign: 'center' }}></th>
+                <th scope="col">Application number</th>
+                <th scope="col">Applicant</th>
+                <th scope="col">Application type</th>
+                <th scope="col">Current status</th>
+              </tr>
+            </thead>
+            <tbody>
+              {applicationsData.map(app => {
+                const isSelected = selectedAppNumber === app.applicationNumber;
+                const { dotColor, label } = getStatusMeta(app.status);
+
+                return (
+                  <tr 
+                    key={app.applicationNumber}
+                    className={isSelected ? 'ca-modal-row selected' : 'ca-modal-row'}
+                    onClick={() => setSelectedAppNumber(app.applicationNumber)}
+                    onDoubleClick={handleConfirm}
+                  >
+                    <td style={{ textAlign: 'center' }}>
+                      <input 
+                        type="radio" 
+                        name="demoAppSelection"
+                        checked={isSelected}
+                        onChange={() => setSelectedAppNumber(app.applicationNumber)}
+                        aria-label={`Select ${app.applicationNumber}`}
+                        className="ca-radio"
+                      />
+                    </td>
+                    <td className="ca-app-num-cell">
+                      {app.applicationNumber}
+                    </td>
+                    <td className="ca-applicant-cell">
+                      {app.applicantName}
+                    </td>
+                    <td className="ca-app-type-cell">
+                      {app.applicationType}
+                    </td>
+                    <td className="ca-status-cell">
+                      <span 
+                        className="ca-status-dot" 
+                        style={{ backgroundColor: dotColor }}
+                      />
+                      <span>{label}</span>
                     </td>
                   </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-
-          {/* Mobile Stacked Cards View (<640px) */}
-          <div className="gov-modal-cards-container">
-            {applicationsData.map(app => (
-              <div key={app.applicationNumber} className="gov-modal-record-card">
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: '8px' }}>
-                  <span style={{ fontWeight: 700, fontSize: '1rem', color: 'var(--color-text-primary)' }}>
-                    {app.applicationNumber}
-                  </span>
-                  <StatusBadge status={app.status} />
-                </div>
-                <div style={{ fontWeight: 600, fontSize: '0.9375rem', marginBottom: '4px' }}>
-                  {app.applicantName}
-                </div>
-                <div style={{ fontSize: '0.875rem', color: 'var(--color-text-secondary)', marginBottom: '8px' }}>
-                  {app.applicationType} &bull; DOB: {app.displayDob}
-                </div>
-                <button
-                  type="button"
-                  className="btn btn-secondary btn-sm"
-                  style={{ width: '100%' }}
-                  onClick={() => {
-                    onSelectRecord(app);
-                    onClose();
-                  }}
-                >
-                  Use This Record
-                </button>
-              </div>
-            ))}
-          </div>
-
+                );
+              })}
+            </tbody>
+          </table>
         </div>
 
         {/* Modal Footer */}
-        <div className="gov-modal-footer">
-          <button type="button" className="btn btn-secondary btn-sm" onClick={onClose}>
-            Close
+        <div className="ca-modal-footer">
+          <button
+            type="button"
+            className="ca-btn-modal-primary"
+            onClick={handleConfirm}
+          >
+            Use selected application
+          </button>
+          <button 
+            type="button" 
+            className="ca-btn-modal-cancel" 
+            onClick={onClose}
+          >
+            Cancel
           </button>
         </div>
 

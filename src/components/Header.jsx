@@ -2,8 +2,11 @@ import React, { useState } from 'react';
 import { Link, NavLink, useLocation, useNavigate } from 'react-router-dom';
 
 /**
- * Government Digital Service Header Component
- * Two-level header with slim top disclaimer, brand wordmark, search, and primary navigation.
+ * Exact Header matching Reference Design:
+ * - Slim top demo disclaimer bar with red pill badge and "Learn more →"
+ * - Canadian Red Maple Leaf icon + "Visa Status Portal" + "Immigration Application Services"
+ * - Language link + Search input [Search the portal... 🔍]
+ * - Primary Navigation with dropdown indicators and active red bottom border
  */
 export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -11,7 +14,6 @@ export default function Header() {
   const location = useLocation();
   const navigate = useNavigate();
 
-  // "Application Status" active state should light up when inside the status flow
   const isStatusFlow = 
     location.pathname.startsWith('/login') || 
     location.pathname.startsWith('/status') || 
@@ -27,72 +29,78 @@ export default function Header() {
 
   const handleLanguageClick = (e) => {
     e.preventDefault();
-    alert('Démonstration en français : Ce portail statique est un prototype d\'évaluation technique. Les 10 dossiers fictifs sont consultables en version anglaise.');
+    alert("Démonstration en français : Ce portail statique est un prototype d'évaluation technique. Les 10 dossiers fictifs sont consultables en version anglaise.");
   };
 
   return (
     <>
+      {/* Main Header Top Bar */}
 
-      {/* Main Header Container */}
-      <header className="gov-header" role="banner">
-        <div className="gov-container">
-          <div className="gov-top-bar">
+      {/* 2. Main Header Top Bar */}
+      <header className="ca-header" role="banner">
+        <div className="ca-container">
+          <div className="ca-header-top">
             
-            {/* Fictional Portal Wordmark Brand */}
-            <Link to="/" className="gov-brand" aria-label="Visa Status Portal Home">
-              <div className="gov-brand-icon" aria-hidden="true">V</div>
-              <div className="gov-brand-text">
-                <span className="gov-brand-title">Visa Status Portal</span>
-                <span className="gov-brand-subtitle">Immigration Application Services</span>
+            {/* Logo: Stylized Red Maple Leaf + Title & Subtitle */}
+            <Link to="/" className="ca-brand" aria-label="Visa Status Portal Home">
+              <svg 
+                className="ca-maple-icon" 
+                viewBox="0 0 512 512" 
+                fill="#D52B1E" 
+                width="36" 
+                height="36" 
+                style={{ width: '36px', height: '36px', minWidth: '36px', flexShrink: 0, display: 'inline-block' }}
+                aria-hidden="true"
+              >
+                <path d="M495.8 286.7l-41.2-14.7 18.2-56.9c2.4-7.4-3.1-15-11-15-1.9 0-3.9.5-5.6 1.4L372.5 244l13.6-70.2c1.7-8.6-4.5-16.7-13.2-17.2-2.1-.1-4.2.3-6.2 1.3L309 187.3 322 71.9c1-8.9-5.6-16.8-14.5-17.4-2.5-.2-5 .4-7.2 1.6l-44.3 25.3-44.3-25.3c-2.2-1.2-4.7-1.8-7.2-1.6-8.9.6-15.5 8.5-14.5 17.4l13 115.4-57.7-29.4c-2-1-4.1-1.4-6.2-1.3-8.7.5-14.9 8.6-13.2 17.2l13.6 70.2-83.7-42.5c-1.7-.9-3.7-1.4-5.6-1.4-7.9 0-13.4 7.6-11 15l18.2 56.9-41.2 14.7c-7.9 2.8-11.4 11.5-7.7 18.9 1 2 2.6 3.7 4.5 4.9l80.2 50.8-21.8 41.7c-4.1 7.8-1.1 17.5 6.7 21.6 2.3 1.2 4.9 1.8 7.5 1.7l86.9-3.7-10 65.5h37.4l-10-65.5 86.9 3.7c2.6.1 5.2-.5 7.5-1.7 7.8-4.1 10.8-13.8 6.7-21.6l-21.8-41.7 80.2-50.8c1.9-1.2 3.5-2.9 4.5-4.9 3.7-7.4.2-16.1-7.7-18.9z"/>
+              </svg>
+              <div className="ca-brand-titles">
+                <span className="ca-brand-main">Visa Status Portal</span>
+                <span className="ca-brand-sub">Immigration Application Services</span>
               </div>
             </Link>
 
-            {/* Header Right: Language, Search, and Mobile Toggle */}
-            <div className="gov-header-utilities">
+            {/* Header Right: Language & Search */}
+            <div className="ca-header-right">
               
-              <a href="#" className="gov-lang-link" onClick={handleLanguageClick} lang="fr">
+              <a href="#" className="ca-lang-link" onClick={handleLanguageClick} lang="fr">
                 Français
               </a>
 
-              {/* Polished Search Control (44px height, clean border, subtle focus ring) */}
-              <form className="gov-search-form" onSubmit={handleSearchSubmit} role="search">
-                <div className="gov-search-control">
-                  <label htmlFor="headerSearchInput" className="sr-only" style={{ position: 'absolute', width: '1px', height: '1px', padding: 0, margin: '-1px', overflow: 'hidden', clip: 'rect(0,0,0,0)', border: 0 }}>
-                    Search the demonstration portal...
-                  </label>
+              {/* Search Control matching the reference */}
+              <form className="ca-search-form" onSubmit={handleSearchSubmit} role="search">
+                <div className="ca-search-wrapper">
                   <input 
                     type="search" 
-                    id="headerSearchInput" 
-                    className="gov-search-input" 
-                    placeholder="Search the demonstration portal..." 
+                    className="ca-search-input" 
+                    placeholder="Search the portal..." 
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                     required 
                     autoComplete="off"
+                    aria-label="Search the portal"
                   />
-                  <button type="submit" className="gov-search-btn" aria-label="Submit search">
-                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <button type="submit" className="ca-search-btn" aria-label="Submit search">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="#4B5563" style={{ width: '16px', height: '16px', display: 'block' }} aria-hidden="true">
                       <path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 14z"/>
                     </svg>
                   </button>
                 </div>
               </form>
 
-              {/* Mobile Menu Button */}
+              {/* Mobile Menu Toggle */}
               <button 
                 type="button" 
-                className="gov-mobile-toggle" 
+                className="ca-mobile-toggle" 
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
                 aria-expanded={mobileMenuOpen}
-                aria-controls="mainNav" 
-                aria-label="Toggle Navigation Menu"
+                aria-label="Toggle Navigation"
               >
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                   <line x1="3" y1="12" x2="21" y2="12"></line>
                   <line x1="3" y1="6" x2="21" y2="6"></line>
                   <line x1="3" y1="18" x2="21" y2="18"></line>
                 </svg>
-                <span>{mobileMenuOpen ? 'Close' : 'Menu'}</span>
               </button>
 
             </div>
@@ -100,70 +108,72 @@ export default function Header() {
           </div>
         </div>
 
-        {/* Primary Navigation Bar (Thin Red Accent Line Below) */}
-        <nav className={`gov-main-nav ${mobileMenuOpen ? 'open' : ''}`} id="mainNav" aria-label="Primary Navigation">
-          <div className="gov-container">
-            <ul className="gov-nav-list">
-              <li className="gov-nav-item">
+        {/* 3. Navigation Bar */}
+        <nav className={`ca-nav ${mobileMenuOpen ? 'open' : ''}`} aria-label="Primary Navigation">
+          <div className="ca-container">
+            <ul className="ca-nav-list">
+              <li className="ca-nav-item">
                 <NavLink 
                   to="/" 
                   end 
                   onClick={() => setMobileMenuOpen(false)}
-                  className={({ isActive }) => `gov-nav-link ${isActive ? 'active' : ''}`}
+                  className={({ isActive }) => `ca-nav-link ${isActive ? 'active' : ''}`}
                 >
-                  Immigration
+                  <span>Immigration</span>
+                  <span className="ca-dropdown-caret" aria-hidden="true">&#x25BE;</span>
                 </NavLink>
               </li>
-              <li className="gov-nav-item">
+              <li className="ca-nav-item">
                 <NavLink 
                   to="/services#visitor" 
                   onClick={() => setMobileMenuOpen(false)}
-                  className={({ isActive }) => `gov-nav-link ${isActive ? 'active' : ''}`}
+                  className={({ isActive }) => `ca-nav-link ${isActive ? 'active' : ''}`}
                 >
                   Visit
                 </NavLink>
               </li>
-              <li className="gov-nav-item">
+              <li className="ca-nav-item">
                 <NavLink 
                   to="/services#study" 
                   onClick={() => setMobileMenuOpen(false)}
-                  className={({ isActive }) => `gov-nav-link ${isActive ? 'active' : ''}`}
+                  className={({ isActive }) => `ca-nav-link ${isActive ? 'active' : ''}`}
                 >
                   Study
                 </NavLink>
               </li>
-              <li className="gov-nav-item">
+              <li className="ca-nav-item">
                 <NavLink 
                   to="/services#work" 
                   onClick={() => setMobileMenuOpen(false)}
-                  className={({ isActive }) => `gov-nav-link ${isActive ? 'active' : ''}`}
+                  className={({ isActive }) => `ca-nav-link ${isActive ? 'active' : ''}`}
                 >
                   Work
                 </NavLink>
               </li>
-              <li className="gov-nav-item">
+              <li className="ca-nav-item">
                 <NavLink 
                   to="/services#pr" 
                   onClick={() => setMobileMenuOpen(false)}
-                  className={({ isActive }) => `gov-nav-link ${isActive ? 'active' : ''}`}
+                  className={({ isActive }) => `ca-nav-link ${isActive ? 'active' : ''}`}
                 >
                   Permanent Residence
                 </NavLink>
               </li>
-              <li className="gov-nav-item">
+              <li className="ca-nav-item">
                 <NavLink 
                   to="/login" 
                   onClick={() => setMobileMenuOpen(false)}
-                  className={`gov-nav-link ${isStatusFlow ? 'active' : ''}`}
+                  className={`ca-nav-link ${isStatusFlow ? 'active' : ''}`}
                 >
-                  Application Status
+                  <span>Application Status</span>
+                  <span className="ca-dropdown-caret" aria-hidden="true">&#x25BE;</span>
                 </NavLink>
               </li>
-              <li className="gov-nav-item">
+              <li className="ca-nav-item">
                 <NavLink 
                   to="/help" 
                   onClick={() => setMobileMenuOpen(false)}
-                  className={({ isActive }) => `gov-nav-link ${isActive ? 'active' : ''}`}
+                  className={({ isActive }) => `ca-nav-link ${isActive ? 'active' : ''}`}
                 >
                   Help
                 </NavLink>
