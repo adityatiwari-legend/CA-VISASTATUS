@@ -1,0 +1,550 @@
+[
+  {
+    "applicationNumber": "DEMO-2026-001",
+    "dateOfBirth": "2000-01-01",
+    "displayDob": "01/01/2000",
+    "applicantName": "Alex Morgan",
+    "applicationType": "Visitor Visa",
+    "status": "Application received",
+    "submissionDate": "September 12, 2026",
+    "lastUpdated": "September 15, 2026",
+    "currentStage": "Intake Completeness & Registration",
+    "statusDescription": "Your demonstration application has completed intake triage and has been officially opened for file assessment. Mandatory documents have been cataloged and your file has been queued for officer review.",
+    "actionRequired": "No action is currently required. You will be notified if supplementary documentation or biometrics instructions are issued.",
+    "alertType": "info",
+    "alertTitle": "Application officially received and acknowledged",
+    "office": "Regional Intake Operations Centre — Demo",
+    "estimatedProcessingDays": "14–21 business days",
+    "timeline": [
+      {
+        "title": "Application submitted",
+        "date": "September 12, 2026",
+        "status": "completed",
+        "description": "Application package and fee transaction received online."
+      },
+      {
+        "title": "Application received",
+        "date": "September 15, 2026",
+        "status": "completed",
+        "description": "Completeness check passed. Official file registered."
+      },
+      {
+        "title": "Officer allocation",
+        "date": null,
+        "status": "current",
+        "description": "Queued for primary eligibility and admissibility review."
+      },
+      {
+        "title": "Biometrics collection",
+        "date": null,
+        "status": "pending",
+        "description": "Biometrics instruction will follow upon officer review."
+      },
+      {
+        "title": "Final decision",
+        "date": null,
+        "status": "pending",
+        "description": "Final visitor visa demonstration determination."
+      }
+    ],
+    "applicationDetails": {
+      "categoryCode": "V-1 Temporary Resident (Tourist)",
+      "biometricsStatus": "Pending instruction",
+      "medicalExam": "Not requested",
+      "backgroundCheck": "Queued",
+      "specialHandling": "Standard demonstration processing"
+    }
+  },
+  {
+    "applicationNumber": "DEMO-2026-002",
+    "dateOfBirth": "2001-08-22",
+    "displayDob": "22/08/2001",
+    "applicantName": "Daniel Carter",
+    "applicationType": "Study Permit",
+    "status": "Processing",
+    "submissionDate": "August 28, 2026",
+    "lastUpdated": "September 20, 2026",
+    "currentStage": "Academic Credential & Financial Review",
+    "statusDescription": "A processing officer is currently assessing your demonstration study permit application. This evaluation confirms genuine student intent, designated learning institution acceptance, and tuition financial sufficiency.",
+    "actionRequired": "Ensure your academic institution acceptance remains active throughout the review period.",
+    "alertType": "info",
+    "alertTitle": "File under active assessment",
+    "office": "Central Student Processing Directorate — Demo",
+    "estimatedProcessingDays": "3–4 weeks remaining",
+    "timeline": [
+      {
+        "title": "Application submitted",
+        "date": "August 28, 2026",
+        "status": "completed",
+        "description": "Initial study permit package and tuition receipt submitted."
+      },
+      {
+        "title": "Application received",
+        "date": "September 02, 2026",
+        "status": "completed",
+        "description": "Initial intake validation confirmed."
+      },
+      {
+        "title": "Eligibility review",
+        "date": null,
+        "status": "current",
+        "description": "Officer evaluating acceptance letter and financial statements."
+      },
+      {
+        "title": "Background & security screening",
+        "date": null,
+        "status": "pending",
+        "description": "Standard inter-agency security review."
+      },
+      {
+        "title": "Final decision",
+        "date": null,
+        "status": "pending",
+        "description": "Study permit introduction letter dispatch."
+      }
+    ],
+    "applicationDetails": {
+      "categoryCode": "SP-1 Post-Secondary University",
+      "biometricsStatus": "Enrolled & Valid",
+      "medicalExam": "Passed",
+      "backgroundCheck": "In progress",
+      "specialHandling": "Student Direct Stream (Simulation)"
+    }
+  },
+  {
+    "applicationNumber": "DEMO-2026-003",
+    "dateOfBirth": "1988-11-10",
+    "displayDob": "10/11/1988",
+    "applicantName": "Sophia Williams",
+    "applicationType": "Work Permit",
+    "status": "Biometrics required",
+    "submissionDate": "September 10, 2026",
+    "lastUpdated": "September 16, 2026",
+    "currentStage": "Biometric Enrolment Pending",
+    "statusDescription": "A Biometric Instruction Letter (BIL) has been issued for this demonstration application. Your fingerprints and digital photograph must be enrolled at an authorized Visa Application Centre (VAC) before processing can advance.",
+    "actionRequired": "Schedule an appointment at an authorized Visa Application Centre within 30 days of the instruction letter date. Bring your passport and the demonstration Biometric Instruction Letter.",
+    "alertType": "warning",
+    "alertTitle": "Action required: Biometrics collection appointment",
+    "office": "International Mobility Review Branch — Demo",
+    "estimatedProcessingDays": "Paused pending biometric capture",
+    "timeline": [
+      {
+        "title": "Application submitted",
+        "date": "September 10, 2026",
+        "status": "completed",
+        "description": "Employer job offer and work permit submission received."
+      },
+      {
+        "title": "Application received",
+        "date": "September 13, 2026",
+        "status": "completed",
+        "description": "Intake passed and biometrics fee verified."
+      },
+      {
+        "title": "Biometrics required",
+        "date": null,
+        "status": "action_required",
+        "description": "Biometric Instruction Letter issued. Awaiting applicant appointment."
+      },
+      {
+        "title": "Officer eligibility review",
+        "date": null,
+        "status": "pending",
+        "description": "Will resume once biometrics verification is confirmed."
+      },
+      {
+        "title": "Final decision",
+        "date": null,
+        "status": "pending",
+        "description": "Issuance of work permit letter of introduction."
+      }
+    ],
+    "applicationDetails": {
+      "categoryCode": "WP-Intra-Company Transferee",
+      "biometricsStatus": "Action Required — BIL Issued",
+      "medicalExam": "Not required",
+      "backgroundCheck": "Paused",
+      "specialHandling": "Requires physical biometric appointment"
+    }
+  },
+  {
+    "applicationNumber": "DEMO-2026-004",
+    "dateOfBirth": "1995-03-05",
+    "displayDob": "05/03/1995",
+    "applicantName": "Noah Bennett",
+    "applicationType": "Visitor Visa",
+    "status": "Biometrics completed",
+    "submissionDate": "August 20, 2026",
+    "lastUpdated": "September 18, 2026",
+    "currentStage": "Post-Biometrics Admissibility Review",
+    "statusDescription": "Your biometric details (fingerprints and photograph) have been validated and successfully linked to your demonstration file. Assessment has officially resumed.",
+    "actionRequired": "No further action is required from you at this time. Officer review is actively proceeding.",
+    "alertType": "info",
+    "alertTitle": "Biometrics confirmed — Processing resumed",
+    "office": "Consular Services Network — Demo",
+    "estimatedProcessingDays": "10–14 business days remaining",
+    "timeline": [
+      {
+        "title": "Application submitted",
+        "date": "August 20, 2026",
+        "status": "completed",
+        "description": "Online application received."
+      },
+      {
+        "title": "Application received",
+        "date": "August 24, 2026",
+        "status": "completed",
+        "description": "Initial completeness verified."
+      },
+      {
+        "title": "Biometrics enrolled & verified",
+        "date": "September 17, 2026",
+        "status": "completed",
+        "description": "Fingerprints and digital photo recorded and archived."
+      },
+      {
+        "title": "Admissibility review",
+        "date": null,
+        "status": "current",
+        "description": "Officer confirming purpose of visit and travel duration."
+      },
+      {
+        "title": "Final decision",
+        "date": null,
+        "status": "pending",
+        "description": "Final decision notification."
+      }
+    ],
+    "applicationDetails": {
+      "categoryCode": "V-1 Multiple Entry Tourist",
+      "biometricsStatus": "Completed on Sep 17, 2026 (Valid 10 yrs)",
+      "medicalExam": "Exempt",
+      "backgroundCheck": "In progress",
+      "specialHandling": "Expedited biometrics verification"
+    }
+  },
+  {
+    "applicationNumber": "DEMO-2026-005",
+    "dateOfBirth": "1991-07-19",
+    "displayDob": "19/07/1991",
+    "applicantName": "Emma Anderson",
+    "applicationType": "Study Permit",
+    "status": "Background verification",
+    "submissionDate": "June 15, 2026",
+    "lastUpdated": "September 24, 2026",
+    "currentStage": "Security & Inter-Agency Verification",
+    "statusDescription": "Your demonstration file has passed statutory educational eligibility and is currently undergoing standard background verification. This includes routine checks on identity records and travel history.",
+    "actionRequired": "Ensure your contact email and home address remain current on file. We will notify you when screening concludes.",
+    "alertType": "info",
+    "alertTitle": "Background and security verification underway",
+    "office": "Centralized PR & Student Screening Division — Demo",
+    "estimatedProcessingDays": "3–5 weeks",
+    "timeline": [
+      {
+        "title": "Application submitted",
+        "date": "June 15, 2026",
+        "status": "completed",
+        "description": "Application and provincial attestation letter filed."
+      },
+      {
+        "title": "Eligibility confirmed",
+        "date": "July 22, 2026",
+        "status": "completed",
+        "description": "Officer verified enrollment and financial solvency."
+      },
+      {
+        "title": "Biometrics enrolled",
+        "date": "August 04, 2026",
+        "status": "completed",
+        "description": "Biometric record archived."
+      },
+      {
+        "title": "Background verification",
+        "date": null,
+        "status": "current",
+        "description": "Screening of security clearance and international travel records."
+      },
+      {
+        "title": "Final decision",
+        "date": null,
+        "status": "pending",
+        "description": "Final permit determination."
+      }
+    ],
+    "applicationDetails": {
+      "categoryCode": "SP-Graduate Research Fellow",
+      "biometricsStatus": "Completed & Valid",
+      "medicalExam": "Passed",
+      "backgroundCheck": "Active inter-agency review",
+      "specialHandling": "Provincial Attestation Letter verified"
+    }
+  },
+  {
+    "applicationNumber": "DEMO-2026-006",
+    "dateOfBirth": "1985-01-30",
+    "displayDob": "30/01/1985",
+    "applicantName": "Lucas Martin",
+    "applicationType": "Permanent Residence",
+    "status": "Additional documents required",
+    "submissionDate": "May 10, 2026",
+    "lastUpdated": "September 21, 2026",
+    "currentStage": "Procedural Fairness / Document Request",
+    "statusDescription": "An official documentation request letter has been issued for this demonstration application. The reviewing officer requires supplementary employment letters and bank verification statements before an assessment decision can be made.",
+    "actionRequired": "Upload: (1) Updated employer confirmation letter signed within 30 days, (2) Most recent 3 months of bank statements. Response deadline: October 21, 2026.",
+    "alertType": "warning",
+    "alertTitle": "Important: Additional demonstration documents required",
+    "office": "Case Processing Centre — Central PR Unit — Demo",
+    "estimatedProcessingDays": "Paused pending document upload",
+    "timeline": [
+      {
+        "title": "Application submitted",
+        "date": "May 10, 2026",
+        "status": "completed",
+        "description": "Provincial Nominee permanent residence submission."
+      },
+      {
+        "title": "Acknowledgment of Receipt (AOR)",
+        "date": "June 02, 2026",
+        "status": "completed",
+        "description": "File DEMO-2026-006 officially acknowledged."
+      },
+      {
+        "title": "Additional documents required",
+        "date": null,
+        "status": "action_required",
+        "description": "Official request letter issued for employment verification."
+      },
+      {
+        "title": "Document review",
+        "date": null,
+        "status": "pending",
+        "description": "Officer will review submitted supplementary documents."
+      },
+      {
+        "title": "Final decision & COPR",
+        "date": null,
+        "status": "pending",
+        "description": "Confirmation of Permanent Residence issuance pending."
+      }
+    ],
+    "applicationDetails": {
+      "categoryCode": "PR-Provincial Nominee Program",
+      "biometricsStatus": "Completed",
+      "medicalExam": "Passed",
+      "backgroundCheck": "Paused pending documentation",
+      "specialHandling": "Procedural Fairness 30-Day Window"
+    }
+  },
+  {
+    "applicationNumber": "DEMO-2026-007",
+    "dateOfBirth": "1993-09-12",
+    "displayDob": "12/09/1993",
+    "applicantName": "Olivia Wilson",
+    "applicationType": "Work Permit",
+    "status": "Decision pending",
+    "submissionDate": "July 18, 2026",
+    "lastUpdated": "September 26, 2026",
+    "currentStage": "Supervisory File Authorization",
+    "statusDescription": "All statutory assessments, eligibility reviews, and background clearances for this demonstration file have finished. The application is with a designated supervisory officer for final administrative sign-off.",
+    "actionRequired": "No action is required. The formal demonstration decision notification will be published shortly.",
+    "alertType": "info",
+    "alertTitle": "Assessment concluded — Final decision pending",
+    "office": "Specialized Processing Centre — Demo",
+    "estimatedProcessingDays": "3–5 business days",
+    "timeline": [
+      {
+        "title": "Application submitted",
+        "date": "July 18, 2026",
+        "status": "completed",
+        "description": "Work permit renewal submitted online."
+      },
+      {
+        "title": "Eligibility review passed",
+        "date": "August 22, 2026",
+        "status": "completed",
+        "description": "Employer compliance and compensation verified."
+      },
+      {
+        "title": "Clearances completed",
+        "date": "September 19, 2026",
+        "status": "completed",
+        "description": "Background and security clearances recorded."
+      },
+      {
+        "title": "Final decision pending",
+        "date": null,
+        "status": "current",
+        "description": "Supervising officer conducting final formal sign-off."
+      },
+      {
+        "title": "Decision dispatch",
+        "date": null,
+        "status": "pending",
+        "description": "Decision notice issuance."
+      }
+    ],
+    "applicationDetails": {
+      "categoryCode": "WP-LMIA Exempt (C10 Significant Benefit)",
+      "biometricsStatus": "Verified & Current",
+      "medicalExam": "Exempt",
+      "backgroundCheck": "Completed successfully",
+      "specialHandling": "Final authorization queue"
+    }
+  },
+  {
+    "applicationNumber": "DEMO-2026-008",
+    "dateOfBirth": "1990-06-25",
+    "displayDob": "25/06/1990",
+    "applicantName": "Ethan Brooks",
+    "applicationType": "Express Entry",
+    "status": "Application submitted",
+    "submissionDate": "September 25, 2026",
+    "lastUpdated": "September 25, 2026",
+    "currentStage": "Initial Electronic Intake Queue",
+    "statusDescription": "Your demonstration Express Entry application has been submitted and is currently in the initial electronic intake queue awaiting file registration and fee clearance.",
+    "actionRequired": "Ensure all electronic uploaded documents remain accessible in your records.",
+    "alertType": "info",
+    "alertTitle": "Application successfully submitted",
+    "office": "Central Intake Office — Demonstration Division",
+    "estimatedProcessingDays": "Initial triage: 5 business days",
+    "timeline": [
+      {
+        "title": "Application submitted",
+        "date": "September 25, 2026",
+        "status": "completed",
+        "description": "Electronic APR package submitted under Federal Skilled Worker stream."
+      },
+      {
+        "title": "Intake triage",
+        "date": null,
+        "status": "current",
+        "description": "System checking fee payment and primary document completeness."
+      },
+      {
+        "title": "Acknowledgment of Receipt",
+        "date": null,
+        "status": "pending",
+        "description": "Official confirmation letter and file registration."
+      },
+      {
+        "title": "Eligibility & background",
+        "date": null,
+        "status": "pending",
+        "description": "Comprehensive Ranking System points verification."
+      },
+      {
+        "title": "Final decision",
+        "date": null,
+        "status": "pending",
+        "description": "Final determination and COPR."
+      }
+    ],
+    "applicationDetails": {
+      "categoryCode": "EE-Federal Skilled Worker Class",
+      "biometricsStatus": "Pending instruction",
+      "medicalExam": "Upfront medical uploaded",
+      "backgroundCheck": "Not started",
+      "specialHandling": "Online Express Entry Intake"
+    }
+  },
+  {
+    "applicationNumber": "DEMO-2026-009",
+    "dateOfBirth": "1997-12-08",
+    "displayDob": "08/12/1997",
+    "applicantName": "Mia Thompson",
+    "applicationType": "Visitor Visa",
+    "status": "Approved — Demonstration Only",
+    "submissionDate": "August 02, 2026",
+    "lastUpdated": "September 22, 2026",
+    "currentStage": "Demonstration Document Ready",
+    "statusDescription": "This demonstration application has been reviewed and determined to be APPROVED for prototype demonstration purposes. A simulated visa counterfoil record has been generated.",
+    "actionRequired": "PROTOTYPE DEMONSTRATION NOTICE: This is simulated data only. No real visa, travel authorization, or government document has been issued.",
+    "alertType": "success",
+    "alertTitle": "Application decision: Approved — Demonstration Only",
+    "office": "Consular Services Processing Network — Demo",
+    "estimatedProcessingDays": "Completed",
+    "timeline": [
+      {
+        "title": "Application submitted",
+        "date": "August 02, 2026",
+        "status": "completed",
+        "description": "Application and itinerary submitted."
+      },
+      {
+        "title": "Biometrics verified",
+        "date": "August 12, 2026",
+        "status": "completed",
+        "description": "Fingerprint and photo identity confirmed."
+      },
+      {
+        "title": "Eligibility & background check",
+        "date": "September 05, 2026",
+        "status": "completed",
+        "description": "Travel purpose and ties verified."
+      },
+      {
+        "title": "Approved — Demonstration Only",
+        "date": "September 22, 2026",
+        "status": "completed",
+        "description": "Demonstration approval granted. Counterfoil simulation valid for 5 years."
+      }
+    ],
+    "applicationDetails": {
+      "categoryCode": "V-1 Multiple Entry Counterfoil",
+      "biometricsStatus": "Enrolled & Valid",
+      "medicalExam": "Exempt",
+      "backgroundCheck": "Passed",
+      "specialHandling": "Simulated Visa Issuance"
+    }
+  },
+  {
+    "applicationNumber": "DEMO-2026-010",
+    "dateOfBirth": "1982-02-14",
+    "displayDob": "14/02/1982",
+    "applicantName": "James Parker",
+    "applicationType": "Permanent Residence",
+    "status": "Refused — Demonstration Only",
+    "submissionDate": "March 15, 2026",
+    "lastUpdated": "September 15, 2026",
+    "currentStage": "File Closed — Determination Finalized",
+    "statusDescription": "This demonstration application has received a simulated refusal decision for prototype testing purposes. Following full review, the demonstration record indicates that simulated qualifying experience criteria were not satisfied.",
+    "actionRequired": "PROTOTYPE DEMONSTRATION NOTICE: This is a fictional refusal record created for technical and UI error-flow demonstration.",
+    "alertType": "danger",
+    "alertTitle": "Application decision: Refused — Demonstration Only",
+    "office": "Centralized Review Directorate — Demo",
+    "estimatedProcessingDays": "Closed",
+    "timeline": [
+      {
+        "title": "Application submitted",
+        "date": "March 15, 2026",
+        "status": "completed",
+        "description": "Permanent residence trades stream application filed."
+      },
+      {
+        "title": "Completeness check",
+        "date": "April 02, 2026",
+        "status": "completed",
+        "description": "Initial intake documents accepted."
+      },
+      {
+        "title": "Eligibility assessment",
+        "date": "July 20, 2026",
+        "status": "completed",
+        "description": "Officer evaluated trade certification and qualifying hours."
+      },
+      {
+        "title": "Refused — Demonstration Only",
+        "date": "September 15, 2026",
+        "status": "completed",
+        "description": "Simulated refusal determination recorded. File archived."
+      }
+    ],
+    "applicationDetails": {
+      "categoryCode": "PR-Federal Skilled Trades",
+      "biometricsStatus": "Completed",
+      "medicalExam": "Passed",
+      "backgroundCheck": "Concluded",
+      "specialHandling": "Simulated Refusal File"
+    }
+  }
+]
