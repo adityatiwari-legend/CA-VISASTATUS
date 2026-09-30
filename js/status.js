@@ -90,13 +90,13 @@ function handleFormSubmit(e) {
   if (!lookupResult || lookupResult.error) {
     if (lookupResult && lookupResult.error === "not_found") {
       showErrorSummary([
-        `We could not find demonstration application "<strong>${escapeHtml(appNumber)}</strong>".`,
-        `Please check the application number. It should match the format <strong>DEMO-2026-001</strong> to <strong>DEMO-2026-010</strong>.`
+        `We could not find application "<strong>${escapeHtml(appNumber)}</strong>".`,
+        `Please check the Tracking ID or Passport Number entered.`
       ], "applicationNumber");
     } else if (lookupResult && lookupResult.error === "dob_mismatch") {
       showErrorSummary([
-        `The date of birth entered does not match the demonstration records for application <strong>${escapeHtml(appNumber)}</strong>.`,
-        `Hint: You can check the sample date of birth in the "View demo applications" table.`
+        `The date of birth entered does not match the records for application <strong>${escapeHtml(appNumber)}</strong>.`,
+        `Please verify your registered date of birth.`
       ], "dateOfBirth");
     } else if (lookupResult && lookupResult.error === "type_mismatch") {
       showErrorSummary([

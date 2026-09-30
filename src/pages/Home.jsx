@@ -7,7 +7,7 @@ import { Link } from 'react-router-dom';
  * - "All immigration and visa services" with 4 cards grid
  * - Horizontal callout card with red left accent and document icon
  */
-export default function Home({ onOpenDemoModal }) {
+export default function Home() {
   return (
     <main id="main-content" className="ca-main-content">
       <div className="gov-container">
@@ -156,7 +156,7 @@ export default function Home({ onOpenDemoModal }) {
                 Check your application status
               </h3>
               <p className="ca-status-callout-desc">
-                View the latest status of your demonstration visa application using your application number and date of birth.
+                View the latest status of your application using your tracking ID or passport number and date of birth.
               </p>
             </div>
           </div>

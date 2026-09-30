@@ -5,17 +5,17 @@ import ErrorSummary from '../components/ErrorSummary';
 import { getApplicationStatus } from '../services/applicationService';
 
 /**
- * Status Verification / Sign In Page matching exact reference (Top-Right screen):
- * - Clean left sidebar with "Application Status" active (red left bar + light blue background)
- * - Blue information alert: "This is a demonstration service"
- * - Application number & Date of birth inputs (with calendar icon)
- * - [ Check status → ] and [ 📄 View demo applications ]
+ * Status Verification / Sign In Page:
+ * - Left secondary navigation
+ * - Verification information notice
+ * - Tracking ID / Passport number & Date of birth inputs (with calendar icon)
+ * - [ Check status → ]
  */
-export default function Login({ onOpenDemoModal, prefilledRecord }) {
+export default function Login({ prefilledRecord }) {
   const navigate = useNavigate();
 
   const [applicationNumber, setApplicationNumber] = useState(
-    prefilledRecord ? prefilledRecord.applicationNumber : ''
+    prefilledRecord ? (prefilledRecord.trackingId || prefilledRecord.applicationNumber) : ''
   );
   const [dateOfBirth, setDateOfBirth] = useState(
     prefilledRecord ? prefilledRecord.displayDob : ''
@@ -28,7 +28,7 @@ export default function Login({ onOpenDemoModal, prefilledRecord }) {
 
   useEffect(() => {
     if (prefilledRecord) {
-      setApplicationNumber(prefilledRecord.applicationNumber);
+      setApplicationNumber(prefilledRecord.trackingId || prefilledRecord.applicationNumber);
       setDateOfBirth(prefilledRecord.displayDob);
       setErrors([]);
       setHasAppError(false);
@@ -46,7 +46,7 @@ export default function Login({ onOpenDemoModal, prefilledRecord }) {
 
     if (!applicationNumber.trim()) {
       validationErrors.push({
-        text: 'Enter the application number shown on your demonstration record.',
+        text: 'Enter your tracking ID or passport number.',
         href: '#applicationNumber'
       });
       setHasAppError(true);
@@ -54,7 +54,7 @@ export default function Login({ onOpenDemoModal, prefilledRecord }) {
 
     if (!dateOfBirth.trim()) {
       validationErrors.push({
-        text: 'Enter your date of birth as shown on your demonstration record.',
+        text: 'Enter your date of birth as registered on your passport.',
         href: '#dateOfBirth'
       });
       setHasDobError(true);
@@ -76,13 +76,13 @@ export default function Login({ onOpenDemoModal, prefilledRecord }) {
         });
       } else {
         if (result.error === 'NOT_FOUND') {
-          setErrors(['We could not find a matching demonstration application.']);
+          setErrors(['We could not find a matching application with the provided tracking ID or passport number.']);
           setHasAppError(true);
         } else if (result.error === 'DOB_MISMATCH') {
-          setErrors(['The information entered does not match our demonstration records.']);
+          setErrors(['The date of birth entered does not match our records.']);
           setHasDobError(true);
         } else {
-          setErrors([result.message || 'An error occurred while verifying the demonstration record.']);
+          setErrors([result.message || 'An error occurred while verifying the record.']);
         }
       }
     } catch (err) {
@@ -106,7 +106,7 @@ export default function Login({ onOpenDemoModal, prefilledRecord }) {
         <div className="gov-container">
           <div className="ca-layout-with-sidebar">
 
-            {/* Left Sidebar (Exact layout matching screenshot) */}
+            {/* Left Sidebar */}
             <aside className="ca-sidebar" aria-label="Secondary navigation">
               
               <button 
@@ -159,10 +159,10 @@ export default function Login({ onOpenDemoModal, prefilledRecord }) {
                 Check your application status
               </h1>
               <p className="ca-page-desc">
-                Enter your application details below to view the status and progress history of a demonstration application.
+                Enter your application details below to view the current status and official processing record.
               </p>
 
-              {/* Blue Alert: This is a demonstration service */}
+              {/* Information Alert */}
               <div className="ca-info-alert" role="status">
                 <div className="ca-info-alert-icon" aria-hidden="true">
                   <svg viewBox="0 0 20 20" fill="#005EA8">
@@ -170,9 +170,9 @@ export default function Login({ onOpenDemoModal, prefilledRecord }) {
                   </svg>
                 </div>
                 <div className="ca-info-alert-body">
-                  <div className="ca-info-alert-title">This is a demonstration service</div>
+                  <div className="ca-info-alert-title">Official Visa & Work Permit Verification</div>
                   <p className="ca-info-alert-text">
-                    Use the sample application numbers to explore how the status tracking works. This does not connect to any government system.
+                    Enter your assigned Tracking ID or Passport Number along with your registered Date of Birth to check your real-time application and visa status.
                   </p>
                 </div>
               </div>
@@ -183,22 +183,22 @@ export default function Login({ onOpenDemoModal, prefilledRecord }) {
               {/* Form Controls */}
               <form className="ca-status-form" onSubmit={handleSubmit} noValidate>
                 
-                {/* Application number field */}
+                {/* Tracking ID or Passport number field */}
                 <div className={`ca-form-group ${hasAppError ? 'has-error' : ''}`}>
                   <label htmlFor="applicationNumber" className="ca-form-label">
-                    Application number
+                    Tracking ID or Passport number
                   </label>
                   <span className="ca-form-sublabel" id="appHelpText">
-                    Enter the application number shown on your demonstration record.
+                    Enter your Tracking ID (e.g. CAN-TRK-95822412) or Passport number (e.g. T3572678).
                   </span>
                   {hasAppError && (
-                    <div className="ca-form-error-msg">Please enter a valid application number.</div>
+                    <div className="ca-form-error-msg">Please enter a valid tracking ID or passport number.</div>
                   )}
                   <input 
                     type="text" 
                     id="applicationNumber" 
                     className="ca-form-input" 
-                    placeholder="e.g. DEMO-2026-001"
+                    placeholder="e.g. CAN-TRK-95822412 or T3572678"
                     value={applicationNumber}
                     onChange={(e) => setApplicationNumber(e.target.value)}
                     disabled={isLoading}
@@ -213,7 +213,7 @@ export default function Login({ onOpenDemoModal, prefilledRecord }) {
                     Date of birth
                   </label>
                   <span className="ca-form-sublabel" id="dobHelpText">
-                    Enter your date of birth as shown on your demonstration record.
+                    Enter your date of birth as registered on your passport.
                   </span>
                   {hasDobError && (
                     <div className="ca-form-error-msg">Please enter a valid date of birth.</div>
@@ -223,7 +223,7 @@ export default function Login({ onOpenDemoModal, prefilledRecord }) {
                       type="text" 
                       id="dateOfBirth" 
                       className="ca-form-input" 
-                      placeholder="DD / MM / YYYY"
+                      placeholder="DD / MM / YYYY or YYYY-MM-DD"
                       value={dateOfBirth}
                       onChange={(e) => setDateOfBirth(e.target.value)}
                       disabled={isLoading}
@@ -245,7 +245,7 @@ export default function Login({ onOpenDemoModal, prefilledRecord }) {
                 {isLoading && (
                   <div className="ca-form-loading-state" role="status">
                     <div className="ca-spinner" aria-hidden="true" />
-                    <span>Checking application status...</span>
+                    <span>Verifying application status...</span>
                   </div>
                 )}
 
@@ -257,21 +257,6 @@ export default function Login({ onOpenDemoModal, prefilledRecord }) {
                     disabled={isLoading}
                   >
                     Check status &rarr;
-                  </button>
-                  <button 
-                    type="button" 
-                    className="ca-btn ca-btn-secondary ca-btn-with-icon"
-                    onClick={onOpenDemoModal}
-                    disabled={isLoading}
-                  >
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
-                      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-                      <polyline points="14 2 14 8 20 8"></polyline>
-                      <line x1="16" y1="13" x2="8" y2="13"></line>
-                      <line x1="16" y1="17" x2="8" y2="17"></line>
-                      <polyline points="10 9 9 9 8 9"></polyline>
-                    </svg>
-                    <span>View demo applications</span>
                   </button>
                 </div>
 
@@ -285,3 +270,4 @@ export default function Login({ onOpenDemoModal, prefilledRecord }) {
     </>
   );
 }
+

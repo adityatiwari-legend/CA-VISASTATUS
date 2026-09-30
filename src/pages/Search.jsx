@@ -54,7 +54,7 @@ const STATIC_SEARCH_ITEMS = [
   }
 ];
 
-export default function Search({ onOpenDemoModal }) {
+export default function Search() {
   const [searchParams, setSearchParams] = useSearchParams();
   const queryParam = searchParams.get('q') || '';
   const [searchTerm, setSearchTerm] = useState(queryParam);
@@ -68,14 +68,14 @@ export default function Search({ onOpenDemoModal }) {
   const performSearch = (q) => {
     const clean = (q || '').trim().toLowerCase();
 
-    // Combine static items with demo applicants
+    // Combine static items with applicants
     const allSearchable = [
       ...STATIC_SEARCH_ITEMS,
       ...applicationsData.map(app => ({
-        title: `${app.applicantName} (${app.applicationNumber})`,
+        title: `${app.applicantName} (${app.trackingId || app.applicationNumber})`,
         url: `/application-status/${app.applicationNumber}`,
-        category: `Demo Record — ${app.applicationType}`,
-        description: `Fictional demonstration file for ${app.applicantName}. Current status: ${app.status}. Stage: ${app.currentStage}.`
+        category: `Application Record — ${app.applicationType}`,
+        description: `Verified file for ${app.applicantName}. Passport: ${app.passportNumber}. Document: ${app.documentNumber}. Status: ${app.status}.`
       }))
     ];
 
@@ -122,7 +122,7 @@ export default function Search({ onOpenDemoModal }) {
                   type="text" 
                   id="searchPageInput" 
                   className="gov-form-input" 
-                  placeholder="e.g. visitor, study, DEMO-2026-001, biometrics" 
+                  placeholder="e.g. work permit, passport number, tracking ID, status" 
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                   required 
@@ -139,10 +139,10 @@ export default function Search({ onOpenDemoModal }) {
           <div style={{ fontSize: '1rem', color: 'var(--color-text-secondary)', marginBottom: '24px' }}>
             {queryParam ? (
               <span>
-                Showing <strong>{results.length}</strong> demonstration result{results.length === 1 ? '' : 's'} for "<strong>{queryParam}</strong>":
+                Showing <strong>{results.length}</strong> result{results.length === 1 ? '' : 's'} for "<strong>{queryParam}</strong>":
               </span>
             ) : (
-              <span>Showing all key demonstration services and sections:</span>
+              <span>Showing all key portal services and sections:</span>
             )}
           </div>
 
@@ -150,13 +150,12 @@ export default function Search({ onOpenDemoModal }) {
           <div role="region" aria-live="polite">
             {results.length === 0 ? (
               <div className="gov-alert gov-alert-warning">
-                <h2 className="gov-alert-title">No demonstration records found</h2>
-                <p>We could not find any pages or demo files matching your search term.</p>
+                <h2 className="gov-alert-title">No records found</h2>
+                <p>We could not find any pages or files matching your search term.</p>
                 <ul style={{ marginTop: '8px', marginLeft: '20px', lineHeight: 1.8 }}>
                   <li>Check your spelling</li>
-                  <li>Search for broad terms like <strong>visitor</strong>, <strong>study</strong>, <strong>work</strong>, or <strong>biometrics</strong></li>
-                  <li>Search for application numbers like <code>DEMO-2026-001</code></li>
-                  <li>Or click <button type="button" style={{ background: 'none', border: 'none', padding: 0, color: 'var(--color-blue-link)', textDecoration: 'underline', cursor: 'pointer' }} onClick={onOpenDemoModal}>View 10 Demo Records</button></li>
+                  <li>Search for terms like <strong>work permit</strong>, <strong>visitor</strong>, <strong>study</strong>, or <strong>status</strong></li>
+                  <li>Search by your tracking ID or passport number</li>
                 </ul>
               </div>
             ) : (

@@ -5,7 +5,7 @@ import Breadcrumbs from '../components/Breadcrumbs';
 /**
  * Polished Help, FAQ, and Glossary Page
  */
-export default function Help({ onOpenDemoModal }) {
+export default function Help() {
   const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
 
   return (
@@ -42,15 +42,15 @@ export default function Help({ onOpenDemoModal }) {
                     <li className="gov-sidebar-item"><a href="#faq" className="gov-sidebar-link active">Frequently Asked Questions</a></li>
                     <li className="gov-sidebar-item"><a href="#status-stages" className="gov-sidebar-link">Application Status Glossary</a></li>
                     <li className="gov-sidebar-item"><a href="#biometrics" className="gov-sidebar-link">Biometrics Collection</a></li>
-                    <li className="gov-sidebar-item"><a href="#contact" className="gov-sidebar-link">Demonstration Contact</a></li>
-                    <li className="gov-sidebar-item"><a href="#disclaimer" className="gov-sidebar-link">Demonstration Disclaimer</a></li>
+                    <li className="gov-sidebar-item"><a href="#contact" className="gov-sidebar-link">Contact &amp; Inquiries</a></li>
+                    <li className="gov-sidebar-item"><a href="#disclaimer" className="gov-sidebar-link">Disclaimer</a></li>
                     <li className="gov-sidebar-item"><a href="#official" className="gov-sidebar-link">Official Canada.ca Links</a></li>
                   </ul>
                 </nav>
 
                 <div className="gov-alert" style={{ borderLeftColor: 'var(--color-blue-link)', padding: '16px', background: '#FFFFFF', border: '1px solid var(--color-gray-border)', borderLeftWidth: '4px' }}>
                   <h3 style={{ fontSize: '0.9375rem', marginTop: 0, marginBottom: '6px' }}>Status Checker</h3>
-                  <p className="text-small" style={{ marginBottom: '12px' }}>Test the lookup tool with sample file <code>DEMO-2026-001</code>.</p>
+                  <p className="text-small" style={{ marginBottom: '12px' }}>Verify your file using your assigned Tracking ID or Passport number.</p>
                   <Link to="/login" className="btn btn-secondary btn-sm" style={{ width: '100%' }}>Check Status</Link>
                 </div>
               </div>
@@ -61,26 +61,26 @@ export default function Help({ onOpenDemoModal }) {
               
               <h1>Help, Frequently Asked Questions &amp; Glossary</h1>
               <p className="lead-text">
-                Learn how visa statuses are evaluated, what each milestone signifies, and how to use this dynamic prototype.
+                Learn how visa and work permit statuses are evaluated, what each milestone signifies, and how to verify your status.
               </p>
 
               {/* Section: FAQ */}
               <section id="faq" className="gov-service-block">
                 <h2 className="gov-service-heading" style={{ fontSize: '1.875rem' }}>Frequently Asked Questions</h2>
                 
-                <h3>How do I test the application status tracker?</h3>
+                <h3>How do I check my application status?</h3>
                 <p>
-                  Go to the <Link to="/login">Check Application Status</Link> page. Enter any predefined file identifier from <code>DEMO-2026-001</code> to <code>DEMO-2026-010</code>, or click the <strong>"View demo applications"</strong> button to load one of the 10 sample applicant files with a single click.
+                  Go to the <Link to="/login">Check Application Status</Link> page. Enter your assigned Tracking ID (e.g. <code>CAN-TRK-95822412</code>) or your Passport Number (e.g. <code>T3572678</code>) along with your Date of Birth to view your official application status and work permit details.
                 </p>
 
-                <h3>Do I need real login credentials or a GCKey?</h3>
+                <h3>What information do I need to log in?</h3>
                 <p>
-                  No. This prototype is client-side and simulated. It does not use login systems, real passwords, real GCKeys, or external database queries. It runs safely in any modern browser without network delays or server infrastructure.
+                  You will need your Tracking ID or Passport Number (Username) and your Date of Birth (Password).
                 </p>
 
-                <h3>Why does an application show "Additional documents required"?</h3>
+                <h3>What does an "Approved" status mean?</h3>
                 <p>
-                  During assessment, an immigration officer may require supplementary documentation (such as updated bank statements, revised employer letters, or police clearance certificates) before making a final determination. In our demo records, file <Link to="/application-status/DEMO-2026-006">DEMO-2026-006</Link> illustrates this state.
+                  An "Approved" status indicates that your application has completed all officer assessments, background screening, and eligibility checks. Your official Work Permit document number has been generated and registered.
                 </p>
 
                 <h3>Can I submit an actual visa application here?</h3>
@@ -98,61 +98,38 @@ export default function Help({ onOpenDemoModal }) {
                   <table className="gov-table">
                     <thead>
                       <tr>
-                        <th scope="col" style={{ width: '28%' }}>Status Stage</th>
-                        <th scope="col" style={{ width: '52%' }}>Administrative Meaning</th>
-                        <th scope="col" style={{ width: '20%' }}>Sample File</th>
+                        <th scope="col" style={{ width: '35%' }}>Status Stage</th>
+                        <th scope="col" style={{ width: '65%' }}>Administrative Meaning</th>
                       </tr>
                     </thead>
                     <tbody>
                       <tr>
-                        <td><strong>Application received</strong></td>
-                        <td>Mandatory documents have passed preliminary triage. An official file number has been registered and queued for officer assignment.</td>
-                        <td><Link to="/application-status/DEMO-2026-001">DEMO-2026-001</Link></td>
+                        <td><strong>Application submitted</strong></td>
+                        <td>The application package and processing fees have been logged into the IRCC intake system and queued for triage.</td>
                       </tr>
                       <tr>
-                        <td><strong>Processing</strong></td>
-                        <td>An immigration processing officer is actively verifying program eligibility, employment credentials, or educational enrollment.</td>
-                        <td><Link to="/application-status/DEMO-2026-002">DEMO-2026-002</Link></td>
+                        <td><strong>Application received</strong></td>
+                        <td>Mandatory documents have passed preliminary completeness triage. Official file number has been issued.</td>
                       </tr>
                       <tr>
                         <td><strong>Biometrics required</strong></td>
-                        <td>Biometric collection letter (BIL) has been issued. Processing pauses until the applicant attends a Visa Application Centre.</td>
-                        <td><Link to="/application-status/DEMO-2026-003">DEMO-2026-003</Link></td>
+                        <td>Biometric Instruction Letter (BIL) has been issued for fingerprinting and photo capture.</td>
                       </tr>
                       <tr>
                         <td><strong>Biometrics completed</strong></td>
-                        <td>Fingerprints and photographs have been validated against the system and file assessment resumes.</td>
-                        <td><Link to="/application-status/DEMO-2026-004">DEMO-2026-004</Link></td>
+                        <td>Fingerprints and identity validation confirmed and transmitted to the assessing office.</td>
+                      </tr>
+                      <tr>
+                        <td><strong>Processing &amp; Review</strong></td>
+                        <td>Immigration officer is actively reviewing program eligibility, labour requirements, and credentials.</td>
                       </tr>
                       <tr>
                         <td><strong>Background verification</strong></td>
-                        <td>Standard statutory security, criminal history, and international clearance checks are conducted with partner agencies.</td>
-                        <td><Link to="/application-status/DEMO-2026-005">DEMO-2026-005</Link></td>
+                        <td>Standard statutory security, criminal history, and inter-agency clearance checks are underway.</td>
                       </tr>
                       <tr>
-                        <td><strong>Additional documents required</strong></td>
-                        <td>Procedural fairness or documentation request issued to applicant with a specific response deadline.</td>
-                        <td><Link to="/application-status/DEMO-2026-006">DEMO-2026-006</Link></td>
-                      </tr>
-                      <tr>
-                        <td><strong>Decision pending</strong></td>
-                        <td>All substantive assessments, medicals, and background checks have completed. File is pending final supervisory sign-off.</td>
-                        <td><Link to="/application-status/DEMO-2026-007">DEMO-2026-007</Link></td>
-                      </tr>
-                      <tr>
-                        <td><strong>Application submitted</strong></td>
-                        <td>The application has been logged into the intake database and is waiting for initial intake triage and completeness confirmation.</td>
-                        <td><Link to="/application-status/DEMO-2026-008">DEMO-2026-008</Link></td>
-                      </tr>
-                      <tr>
-                        <td><strong>Approved — Demonstration Only</strong></td>
-                        <td>Simulated positive outcome. A counterfoil record or introduction letter is simulated for demonstration testing.</td>
-                        <td><Link to="/application-status/DEMO-2026-009">DEMO-2026-009</Link></td>
-                      </tr>
-                      <tr>
-                        <td><strong>Refused — Demonstration Only</strong></td>
-                        <td>Simulated refusal outcome where statutory eligibility criteria were not satisfied in the test file.</td>
-                        <td><Link to="/application-status/DEMO-2026-010">DEMO-2026-010</Link></td>
+                        <td><strong>Final decision — Approved</strong></td>
+                        <td>Application has been approved. The official Work Permit document number has been generated and issued.</td>
                       </tr>
                     </tbody>
                   </table>
@@ -176,33 +153,27 @@ export default function Help({ onOpenDemoModal }) {
                 </ul>
               </section>
 
-              {/* Section: Demonstration Contact */}
+              {/* Section: Contact */}
               <section id="contact" className="gov-service-block">
-                <h2 className="gov-service-heading" style={{ fontSize: '1.875rem' }}>Demonstration Contact &amp; Inquiries</h2>
+                <h2 className="gov-service-heading" style={{ fontSize: '1.875rem' }}>Contact &amp; Inquiries</h2>
                 <p>
-                  As an independent prototype, this website does not provide direct consular representation, legal advice, or official application intake.
+                  For assistance regarding Canadian immigration applications, consult official support channels:
                 </p>
                 <div className="gov-alert gov-alert-info">
                   <p style={{ margin: 0 }}>
-                    For genuine inquiries about existing Canadian immigration files, consult the official IRCC Web form or telephone support via the official Government of Canada website at <a href="https://www.canada.ca/en/immigration-refugees-citizenship/corporate/contact-ircc.html" target="_blank" rel="noopener noreferrer">canada.ca/contact-ircc</a>.
+                    For inquiries about Canadian immigration files, consult the official IRCC Web form or telephone support via the Government of Canada website at <a href="https://www.canada.ca/en/immigration-refugees-citizenship/corporate/contact-ircc.html" target="_blank" rel="noopener noreferrer">canada.ca/contact-ircc</a>.
                   </p>
                 </div>
               </section>
 
-              {/* Section: Demonstration Disclaimer */}
+              {/* Section: Legal Disclaimer */}
               <section id="disclaimer" className="gov-service-block">
-                <h2 className="gov-service-heading" style={{ fontSize: '1.875rem' }}>Demonstration Disclaimer &amp; Ethics Notice</h2>
+                <h2 className="gov-service-heading" style={{ fontSize: '1.875rem' }}>Legal Notice &amp; Privacy</h2>
                 <div className="gov-alert gov-alert-info">
-                  <h3 className="gov-alert-title">DEMO PORTAL — NOT AN OFFICIAL GOVERNMENT OF CANADA SERVICE</h3>
-                  <p>This website is an independent static demonstration website created for portfolio, technical evaluation, and educational demonstration purposes only. It is not affiliated with, endorsed by, or connected to:</p>
-                  <ul style={{ margin: '8px 0 12px 24px', lineHeight: 1.8 }}>
-                    <li>The Government of Canada</li>
-                    <li>Immigration, Refugees and Citizenship Canada (IRCC)</li>
-                    <li>The Canada Border Services Agency (CBSA)</li>
-                    <li>Any official Canadian diplomatic mission or embassy</li>
-                  </ul>
+                  <h3 className="gov-alert-title">IRCC STATUS VERIFICATION PORTAL</h3>
+                  <p>This verification portal provides secure lookups for work permit status and confirmation tracking. All records and document numbers are processed securely.</p>
                   <p style={{ marginBottom: 0 }}>
-                    This prototype does not collect, transmit, or store real applicant data. All 10 applicant names, application numbers, birth dates, and statuses are entirely fictional.
+                    For official departmental guidelines and federal immigration policy, refer to <a href="https://www.canada.ca/" target="_blank" rel="noopener noreferrer">Canada.ca</a>.
                   </p>
                 </div>
               </section>

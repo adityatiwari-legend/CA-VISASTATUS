@@ -52,7 +52,7 @@ export default function ApplicationStatus() {
           <div className="gov-container">
             <div className="ca-loading-card">
               <div className="ca-spinner" aria-hidden="true" />
-              <span>Loading demonstration file...</span>
+              <span>Loading application status...</span>
             </div>
           </div>
         </main>
@@ -74,8 +74,8 @@ export default function ApplicationStatus() {
         <main className="ca-main-content">
           <div className="gov-container">
             <div className="ca-error-box">
-              <h2>Demonstration file not found</h2>
-              <p>We could not locate demonstration file "{id}".</p>
+              <h2>Application record not found</h2>
+              <p>We could not locate application record "{id}".</p>
               <Link to="/login" className="ca-btn ca-btn-primary" style={{ marginTop: '16px' }}>
                 Check another application
               </Link>
@@ -181,19 +181,19 @@ export default function ApplicationStatus() {
             {/* Right Main Content */}
             <section className="ca-main-body" aria-labelledby="statusTitle">
               
-              {/* Top Title & DEMONSTRATION RECORD badge */}
+              {/* Top Title & OFFICIAL RECORD badge */}
               <div className="ca-status-header-row">
                 <div>
                   <h1 id="statusTitle" className="ca-page-title" style={{ marginBottom: '4px' }}>
                     Application status
                   </h1>
                   <p className="ca-page-desc" style={{ marginBottom: 0 }}>
-                    Simulated public-service tracking record for demonstration purposes.
+                    Official status verification record for Canadian immigration and visa services.
                   </p>
                 </div>
                 <div>
-                  <span className="ca-badge-demo-record">
-                    DEMONSTRATION RECORD
+                  <span className="ca-badge-demo-record" style={{ backgroundColor: '#DCFCE7', color: '#15803D', border: '1px solid #BBF7D0' }}>
+                    OFFICIAL RECORD
                   </span>
                 </div>
               </div>
@@ -263,9 +263,27 @@ export default function ApplicationStatus() {
                       <span className="ca-details-val">{application.applicationType}</span>
                     </div>
                     <div className="ca-details-row">
-                      <span className="ca-details-key">Application number</span>
-                      <span className="ca-details-val">{application.applicationNumber}</span>
+                      <span className="ca-details-key">Tracking ID</span>
+                      <span className="ca-details-val" style={{ fontWeight: 600 }}>{application.trackingId || application.applicationNumber}</span>
                     </div>
+                    {application.passportNumber && (
+                      <div className="ca-details-row">
+                        <span className="ca-details-key">Passport number</span>
+                        <span className="ca-details-val">{application.passportNumber}</span>
+                      </div>
+                    )}
+                    {application.documentNumber && (
+                      <div className="ca-details-row">
+                        <span className="ca-details-key">Work permit doc no.</span>
+                        <span className="ca-details-val">{application.documentNumber}</span>
+                      </div>
+                    )}
+                    {application.issuingCountry && (
+                      <div className="ca-details-row">
+                        <span className="ca-details-key">Issuing country</span>
+                        <span className="ca-details-val">{application.issuingCountry}</span>
+                      </div>
+                    )}
                     <div className="ca-details-row">
                       <span className="ca-details-key">Submission date</span>
                       <span className="ca-details-val">{application.submissionDate}</span>
@@ -362,7 +380,7 @@ export default function ApplicationStatus() {
                     <h3 className="ca-info-card-title">What this status means</h3>
                   </div>
                   <p className="ca-info-card-body">
-                    {application.statusDescription || "Your demonstration application is currently undergoing background verification. This step involves additional checks and review. This information is fictional and does not represent a real immigration application."}
+                    {application.statusDescription || "Your application has completed all review phases and the official decision has been registered. You may download or print your official status confirmation."}
                   </p>
                 </div>
 
@@ -381,7 +399,7 @@ export default function ApplicationStatus() {
                     <h3 className="ca-info-card-title">Next steps</h3>
                   </div>
                   <p className="ca-info-card-body">
-                    After {application.currentStage || "verification"}, your application will move to the final decision stage. We will update the status once this step is completed.
+                    {application.actionRequired || "Please keep your approval documentation and valid passport available when traveling to Canada."}
                   </p>
                 </div>
 
@@ -401,7 +419,7 @@ export default function ApplicationStatus() {
                   className="ca-btn ca-btn-secondary"
                   onClick={() => window.print()}
                 >
-                  Print demonstration record
+                  Print official confirmation
                 </button>
               </div>
 
