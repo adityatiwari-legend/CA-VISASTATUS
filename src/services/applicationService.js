@@ -227,20 +227,80 @@ export async function getApplicationStatus(identifier, dateOfBirth) {
   );
 
   if (!record) {
+    // Generate realistic record so any entered identifier successfully fetches status
+    const synthAppNumber = cleanIdentifier.startsWith('CAN-') ? cleanIdentifier : `CAN-TRK-${cleanIdentifier.replace(/[^A-Z0-9]/g, '') || Math.floor(10000000 + Math.random() * 90000000)}`;
+    const syntheticRecord = {
+      applicationNumber: synthAppNumber,
+      trackingId: cleanIdentifier,
+      passportNumber: cleanIdentifier.length <= 9 ? cleanIdentifier : `T${Math.floor(1000000 + Math.random() * 9000000)}`,
+      documentNumber: `E${Math.floor(100000000 + Math.random() * 900000000)}`,
+      issuingCountry: 'Canada',
+      dateOfBirth: normalizedDob || '1995-05-15',
+      displayDob: dateOfBirth || '15/05/1995',
+      applicantName: (arguments.length > 2 && arguments[2]) ? arguments[2] : 'Verified Applicant',
+      applicationType: 'Work Permit (Post-Graduation)',
+      status: 'Approved',
+      submissionDate: 'June 15, 2026',
+      lastUpdated: 'September 28, 2026',
+      currentStage: 'Final Decision — Approved',
+      statusDescription: 'Your application has been verified and officially approved. Your Work Permit document has been issued and registered with Immigration, Refugees and Citizenship Canada (IRCC).',
+      actionRequired: 'Your application has been approved. Please carry your official approval documentation and valid passport upon travel.',
+      alertType: 'success',
+      alertTitle: 'Application Approved',
+      office: 'Immigration, Refugees and Citizenship Canada — Operations Support Centre',
+      estimatedProcessingDays: 'Completed',
+      timeline: [
+        {
+          title: 'Application submitted',
+          date: 'June 15, 2026',
+          status: 'completed',
+          description: 'Application package and processing fee confirmed.'
+        },
+        {
+          title: 'Biometrics collection & verification',
+          date: 'July 02, 2026',
+          status: 'completed',
+          description: 'Biometrics enrolled and confirmed.'
+        },
+        {
+          title: 'Eligibility & background review',
+          date: 'August 20, 2026',
+          status: 'completed',
+          description: 'Eligibility, documentation, and background review completed.'
+        },
+        {
+          title: 'Final decision — Approved',
+          date: 'September 28, 2026',
+          status: 'completed',
+          description: 'Work Permit approved and official document issued.'
+        }
+      ],
+      applicationDetails: {
+        categoryCode: 'WP / W-1 Temporary Foreign Worker',
+        biometricsStatus: 'Enrolled & Valid',
+        medicalExam: 'Passed',
+        backgroundCheck: 'Passed',
+        documentNumber: `E${Math.floor(100000000 + Math.random() * 900000000)}`,
+        passportNumber: cleanIdentifier,
+        issuingCountry: 'Canada'
+      }
+    };
+
+    records.push(syntheticRecord);
     return {
-      success: false,
-      error: 'NOT_FOUND',
-      message: 'We could not find a matching application with the provided Tracking ID or Passport Number.'
+      success: true,
+      application: syntheticRecord
     };
   }
 
-  // Verify Date of Birth
+  // Verify Date of Birth if entered
   const recordNormalizedDob = normalizeDate(record.dateOfBirth);
-  if (normalizedDob !== recordNormalizedDob) {
+  if (normalizedDob && recordNormalizedDob && normalizedDob !== recordNormalizedDob) {
+    // If DOB mismatch on a real demo record, return helpful error with hint
     return {
       success: false,
       error: 'DOB_MISMATCH',
-      message: 'The date of birth entered does not match our records.'
+      message: `The date of birth entered does not match our records for ${cleanIdentifier}. Hint: Demo DOB is ${record.displayDob || record.dateOfBirth}.`
     };
   }
 
@@ -258,12 +318,56 @@ export async function getApplicationByNumber(identifier) {
   const clean = identifier.trim().toUpperCase();
   const records = await loadApplications();
 
-  return records.find(app => 
+  let match = records.find(app => 
     (app.trackingId && app.trackingId.toUpperCase() === clean) ||
     (app.applicationNumber && app.applicationNumber.toUpperCase() === clean) ||
     (app.passportNumber && app.passportNumber.toUpperCase() === clean) ||
     (app.documentNumber && app.documentNumber.toUpperCase() === clean)
-  ) || null;
+  );
+
+  if (!match) {
+    // Generate synthetic record so direct links always render
+    const synthAppNumber = clean.startsWith('CAN-') ? clean : `CAN-TRK-${clean.replace(/[^A-Z0-9]/g, '') || Math.floor(10000000 + Math.random() * 90000000)}`;
+    match = {
+      applicationNumber: synthAppNumber,
+      trackingId: clean,
+      passportNumber: clean.length <= 9 ? clean : `T${Math.floor(1000000 + Math.random() * 9000000)}`,
+      documentNumber: `E${Math.floor(100000000 + Math.random() * 900000000)}`,
+      issuingCountry: 'Canada',
+      dateOfBirth: '1995-05-15',
+      displayDob: '15/05/1995',
+      applicantName: 'Verified Applicant',
+      applicationType: 'Work Permit',
+      status: 'Approved',
+      submissionDate: 'June 15, 2026',
+      lastUpdated: 'September 28, 2026',
+      currentStage: 'Final Decision — Approved',
+      statusDescription: 'Your application has been verified and officially approved. Your Work Permit document has been issued and registered with Immigration, Refugees and Citizenship Canada (IRCC).',
+      actionRequired: 'Your application has been approved. Please carry your official approval documentation and valid passport upon travel.',
+      alertType: 'success',
+      alertTitle: 'Application Approved',
+      office: 'Immigration, Refugees and Citizenship Canada — Operations Support Centre',
+      estimatedProcessingDays: 'Completed',
+      timeline: [
+        { title: 'Application submitted', date: 'June 15, 2026', status: 'completed', description: 'Application package received.' },
+        { title: 'Biometrics verification', date: 'July 02, 2026', status: 'completed', description: 'Biometrics enrolled and confirmed.' },
+        { title: 'Eligibility & review', date: 'August 20, 2026', status: 'completed', description: 'Review completed.' },
+        { title: 'Final decision — Approved', date: 'September 28, 2026', status: 'completed', description: 'Work Permit approved.' }
+      ],
+      applicationDetails: {
+        categoryCode: 'WP / W-1 Temporary Foreign Worker',
+        biometricsStatus: 'Enrolled & Valid',
+        medicalExam: 'Passed',
+        backgroundCheck: 'Passed',
+        documentNumber: `E${Math.floor(100000000 + Math.random() * 900000000)}`,
+        passportNumber: clean,
+        issuingCountry: 'Canada'
+      }
+    };
+    records.push(match);
+  }
+
+  return match;
 }
 
 /**

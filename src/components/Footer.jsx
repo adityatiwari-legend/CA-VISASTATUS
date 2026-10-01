@@ -27,7 +27,8 @@ export default function Footer() {
               <li><Link to="/services#study">Study in Canada</Link></li>
               <li><Link to="/services#work">Work in Canada</Link></li>
               <li><Link to="/services#pr">Permanent Residence</Link></li>
-              <li><Link to="/login">Check Application Status</Link></li>
+              <li><Link to="/status">Fetch Application Status</Link></li>
+              <li><Link to="/login">Account Sign In</Link></li>
             </ul>
           </div>
 

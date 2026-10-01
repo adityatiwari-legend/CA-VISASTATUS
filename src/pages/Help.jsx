@@ -51,7 +51,7 @@ export default function Help() {
                 <div className="gov-alert" style={{ borderLeftColor: 'var(--color-blue-link)', padding: '16px', background: '#FFFFFF', border: '1px solid var(--color-gray-border)', borderLeftWidth: '4px' }}>
                   <h3 style={{ fontSize: '0.9375rem', marginTop: 0, marginBottom: '6px' }}>Status Checker</h3>
                   <p className="text-small" style={{ marginBottom: '12px' }}>Verify your file using your assigned Tracking ID or Passport number.</p>
-                  <Link to="/login" className="btn btn-secondary btn-sm" style={{ width: '100%' }}>Check Status</Link>
+                  <Link to="/status" className="btn btn-secondary btn-sm" style={{ width: '100%' }}>Fetch Status</Link>
                 </div>
               </div>
             </aside>
@@ -70,7 +70,7 @@ export default function Help() {
                 
                 <h3>How do I check my application status?</h3>
                 <p>
-                  Go to the <Link to="/login">Check Application Status</Link> page. Enter your assigned Tracking ID (e.g. <code>CAN-TRK-95822412</code>) or your Passport Number (e.g. <code>T3572678</code>) along with your Date of Birth to view your official application status and work permit details.
+                  Sign in through the <Link to="/login">Sign In</Link> page, or go directly to the <Link to="/status">Fetch Visa Status</Link> page. Enter your assigned Tracking ID (e.g. <code>CAN-TRK-95822412</code>) or your Passport Number (e.g. <code>T3572678</code>) along with your Date of Birth to view your official application status and work permit details.
                 </p>
 
                 <h3>What information do I need to log in?</h3>

@@ -12,7 +12,7 @@ import applicationsData from '../data/applications.json';
  */
 export default function DemoModal({ isOpen, onClose, onSelectRecord, initialSelectedId }) {
   const [selectedAppNumber, setSelectedAppNumber] = useState(
-    initialSelectedId || applicationsData[0]?.applicationNumber || 'DEMO-2026-001'
+    initialSelectedId || applicationsData[0]?.applicationNumber || 'CAN-TRK-95822412'
   );
 
   useEffect(() => {

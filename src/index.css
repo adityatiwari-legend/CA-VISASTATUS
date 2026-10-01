@@ -3309,3 +3309,41 @@ a:focus-visible {
   }
 }
 
+/* ==========================================================================
+   Dummy Login & Authentication Card Styles
+   ========================================================================== */
+.ca-login-card {
+  background: #FFFFFF;
+  border: 1px solid #E5E7EB;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+  padding: 32px 36px;
+  margin-bottom: 32px;
+}
+
+@media (max-width: 640px) {
+  .ca-login-card {
+    padding: 20px 16px;
+  }
+}
+
+.ca-user-pill {
+  transition: all 0.15s ease-in-out;
+}
+
+.ca-user-pill:hover {
+  background: #DBEAFE;
+  border-color: #93C5FD;
+}
+
+.ca-header-logout-link:hover,
+.ca-logout-btn:hover {
+  color: #A5231A !important;
+}
+
+.ca-signin-nav-btn:hover {
+  background: #F1F5F9 !important;
+  border-color: #94A3B8 !important;
+}
+
+

@@ -67,7 +67,7 @@ export default function ApplicationStatus() {
           items={[
             { label: 'Home', url: '/' },
             { label: 'Immigration and Visa', url: '/' },
-            { label: 'Application Status', url: '/login' },
+            { label: 'Fetch Visa Status', url: '/status' },
             { label: 'Not Found' }
           ]} 
         />
@@ -76,8 +76,8 @@ export default function ApplicationStatus() {
             <div className="ca-error-box">
               <h2>Application record not found</h2>
               <p>We could not locate application record "{id}".</p>
-              <Link to="/login" className="ca-btn ca-btn-primary" style={{ marginTop: '16px' }}>
-                Check another application
+              <Link to="/status" className="ca-btn ca-btn-primary" style={{ marginTop: '16px' }}>
+                Fetch another application
               </Link>
             </div>
           </div>
@@ -123,7 +123,7 @@ export default function ApplicationStatus() {
         items={[
           { label: 'Home', url: '/' },
           { label: 'Immigration and Visa', url: '/' },
-          { label: 'Application Status', url: '/login' },
+          { label: 'Fetch Visa Status', url: '/status' },
           { label: 'Application Details' }
         ]} 
       />
@@ -164,8 +164,8 @@ export default function ApplicationStatus() {
                     <Link to="/services#pr" className="ca-sidebar-nav-item">Permanent Residence</Link>
                   </li>
                   <li>
-                    <Link to="/login" className="ca-sidebar-nav-item active">
-                      Application Status
+                    <Link to="/status" className="ca-sidebar-nav-item active">
+                      Fetch Visa Status
                     </Link>
                   </li>
                   <li>
@@ -410,9 +410,9 @@ export default function ApplicationStatus() {
                 <button 
                   type="button" 
                   className="ca-btn ca-btn-primary"
-                  onClick={() => navigate('/login')}
+                  onClick={() => navigate('/status')}
                 >
-                  Check another application &rarr;
+                  Fetch another application &rarr;
                 </button>
                 <button 
                   type="button" 

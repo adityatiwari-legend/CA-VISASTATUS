@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
 import { Link, NavLink, useLocation, useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 
 /**
  * Exact Header matching Reference Design:
  * - Slim top demo disclaimer bar with red pill badge and "Learn more →"
  * - Canadian Red Maple Leaf icon + "Visa Status Portal" + "Immigration Application Services"
+ * - User login indicator & Sign in / Sign out control
  * - Language link + Search input [Search the portal... 🔍]
  * - Primary Navigation with dropdown indicators and active red bottom border
  */
@@ -13,6 +15,7 @@ export default function Header() {
   const [searchQuery, setSearchQuery] = useState('');
   const location = useLocation();
   const navigate = useNavigate();
+  const { user, isLoggedIn, logout } = useAuth();
 
   const isStatusFlow = 
     location.pathname.startsWith('/login') || 
@@ -60,9 +63,77 @@ export default function Header() {
               </div>
             </Link>
 
-            {/* Header Right: Language & Search */}
+            {/* Header Right: Language & Auth & Search */}
             <div className="ca-header-right">
               
+              {/* User Authentication Status */}
+              {isLoggedIn && user ? (
+                <div className="ca-header-user-status" style={{ display: 'inline-flex', alignItems: 'center', gap: '8px' }}>
+                  <span 
+                    className="ca-user-pill" 
+                    title={`Active Account: ${user.email}`}
+                    style={{
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: '5px',
+                      fontSize: '12px',
+                      fontWeight: '600',
+                      color: '#1E3A8A',
+                      background: '#EFF6FF',
+                      padding: '4px 10px',
+                      borderRadius: '20px',
+                      border: '1px solid #BFDBFE'
+                    }}
+                  >
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="#2563EB" aria-hidden="true">
+                      <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                    </svg>
+                    <span>{user.name}</span>
+                  </span>
+                  <button 
+                    type="button" 
+                    onClick={logout} 
+                    className="ca-logout-btn"
+                    style={{
+                      background: 'none',
+                      border: 'none',
+                      color: '#D52B1E',
+                      fontSize: '12px',
+                      fontWeight: '600',
+                      cursor: 'pointer',
+                      padding: '2px 4px',
+                      textDecoration: 'underline'
+                    }}
+                    title="Sign out of current account"
+                  >
+                    Sign out
+                  </button>
+                </div>
+              ) : (
+                <Link 
+                  to="/login" 
+                  className="ca-signin-nav-btn"
+                  style={{
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '5px',
+                    fontSize: '13px',
+                    fontWeight: '600',
+                    color: '#005EA8',
+                    textDecoration: 'none',
+                    padding: '4px 10px',
+                    borderRadius: '4px',
+                    border: '1px solid #CBD5E1',
+                    background: '#F8FAFC'
+                  }}
+                >
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4M10 17l5-5-5-5M15 12H3"/>
+                  </svg>
+                  Sign in
+                </Link>
+              )}
+
               <a href="#" className="ca-lang-link" onClick={handleLanguageClick} lang="fr">
                 Français
               </a>
@@ -161,11 +232,11 @@ export default function Header() {
               </li>
               <li className="ca-nav-item">
                 <NavLink 
-                  to="/login" 
+                  to="/status" 
                   onClick={() => setMobileMenuOpen(false)}
                   className={`ca-nav-link ${isStatusFlow ? 'active' : ''}`}
                 >
-                  <span>Application Status</span>
+                  <span>Fetch Visa Status</span>
                   <span className="ca-dropdown-caret" aria-hidden="true">&#x25BE;</span>
                 </NavLink>
               </li>

@@ -44,7 +44,7 @@ export default function Services() {
                     <li className="gov-sidebar-item"><a href="#study" className="gov-sidebar-link">Study in Canada</a></li>
                     <li className="gov-sidebar-item"><a href="#work" className="gov-sidebar-link">Work in Canada</a></li>
                     <li className="gov-sidebar-item"><a href="#pr" className="gov-sidebar-link">Permanent Residence</a></li>
-                    <li className="gov-sidebar-item"><Link to="/login" className="gov-sidebar-link">Check Status</Link></li>
+                    <li className="gov-sidebar-item"><Link to="/status" className="gov-sidebar-link">Fetch Visa Status</Link></li>
                     <li className="gov-sidebar-item"><Link to="/help" className="gov-sidebar-link">Help &amp; FAQs</Link></li>
                   </ul>
                 </nav>
@@ -52,8 +52,8 @@ export default function Services() {
                 <div className="gov-alert" style={{ borderLeftColor: 'var(--color-red-primary)', padding: '16px', background: '#FFFFFF', border: '1px solid var(--color-gray-border)', borderLeftWidth: '4px' }}>
                   <h3 style={{ fontSize: '0.9375rem', marginTop: 0, marginBottom: '6px' }}>Status Checker</h3>
                   <p className="text-small" style={{ marginBottom: '12px' }}>Verify your application tracking ID or passport number.</p>
-                  <Link to="/login" className="btn btn-primary btn-sm" style={{ width: '100%' }}>
-                    Status Checker
+                  <Link to="/status" className="btn btn-primary btn-sm" style={{ width: '100%' }}>
+                    Fetch Visa Status
                   </Link>
                 </div>
               </div>
@@ -148,7 +148,7 @@ export default function Services() {
                 <h3 className="gov-alert-title">Check your application status</h3>
                 <p>Track your visa or work permit status with your tracking ID or passport number.</p>
                 <div style={{ marginTop: '16px' }}>
-                  <Link to="/login" className="btn btn-primary">Check Application Status</Link>
+                  <Link to="/status" className="btn btn-primary">Fetch Application Status</Link>
                 </div>
               </div>
 

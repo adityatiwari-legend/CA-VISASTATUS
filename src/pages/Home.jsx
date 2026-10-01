@@ -22,11 +22,11 @@ export default function Home() {
               Information about visitor visas, study permits, work permits and application status.
             </p>
             <div className="ca-home-hero-actions">
-              <Link to="/login" className="ca-btn ca-btn-primary">
-                Check application status &rarr;
+              <Link to="/status" className="ca-btn ca-btn-primary">
+                Fetch visa status &rarr;
               </Link>
-              <Link to="/services" className="ca-btn ca-btn-secondary">
-                Explore all services
+              <Link to="/login" className="ca-btn ca-btn-secondary">
+                Sign in to account
               </Link>
             </div>
           </div>
@@ -161,8 +161,8 @@ export default function Home() {
             </div>
           </div>
           <div className="ca-status-callout-right">
-            <Link to="/login" className="ca-btn ca-btn-primary">
-              Check application status &rarr;
+            <Link to="/status" className="ca-btn ca-btn-primary">
+              Fetch application status &rarr;
             </Link>
           </div>
         </section>
